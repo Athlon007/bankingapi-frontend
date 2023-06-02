@@ -147,7 +147,7 @@ export default {
             axios.delete("/users/" + useUserSessionStore().getUserId)
                 .then(response => {
                     this.error = "";
-                    this.$router.push("/");
+                    this.$router.push({ path: "/accountdeleted", query: { wasDeactivated: this.userHasAccount } });
                     useUserSessionStore().logout();
                     useEmitter().emit("logout");
                 })

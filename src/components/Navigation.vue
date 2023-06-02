@@ -38,7 +38,7 @@
               }} {{ this.user.lastname }})</router-link>
             </li>
             <li class="nav-item d-inline">
-              <a class="nav-link d-inline" @click="logout">Logout</a>
+              <a class="nav-link d-inline" @click="logoutClick">Logout</a>
             </li>
           </div>
           <div class="d-inline" v-else>
@@ -69,8 +69,12 @@ export default {
   },
   methods: {
     logout() {
+      this.user = null;
+      this.isEmployeeOrAdmin = false;
+    },
+    logoutClick() {
       useUserSessionStore().logout();
-      this.$router.push("/login");
+      this.logout();
     },
     loadUser() {
       useUserSessionStore().getUser().then(user => {
@@ -88,8 +92,7 @@ export default {
       this.loadUser();
     });
     useEmitter().on("logout", () => {
-      this.user = null;
-      this.isEmployeeOrAdmin = false;
+      this.logout();
     });
   }
 };
