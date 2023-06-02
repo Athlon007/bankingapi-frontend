@@ -40,7 +40,7 @@ export default {
         login() {
             this.store.login(this.username, this.password)
                 .then(() => {
-                    this.$router.push('/');
+                    this.$router.push('/dashboard');
                 })
                 .catch((error) => {
                     this.error = error;
@@ -49,7 +49,7 @@ export default {
     },
     mounted() {
         if (this.store.isAuthenticated) {
-            this.$router.push('/');
+            this.$router.push('/dashboard');
         }
     }
 }

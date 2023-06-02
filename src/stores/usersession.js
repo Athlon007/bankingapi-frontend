@@ -20,7 +20,6 @@ export const useUserSessionStore = defineStore('usersession', {
                 return;
             }
 
-            this.access_token = localStorage['access_token'];
             this.refresh_token = localStorage['refresh_token'];
             this.user_id = localStorage['id'];
             this.expires_at = localStorage['expires_at'];
@@ -30,6 +29,9 @@ export const useUserSessionStore = defineStore('usersession', {
                 this.refresh();
                 return;
             }
+
+
+            this.access_token = localStorage['access_token'];
 
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.access_token;
         },
