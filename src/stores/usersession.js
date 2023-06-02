@@ -43,6 +43,9 @@ export const useUserSessionStore = defineStore('usersession', {
                         password: password,
                     })
                     .then((response) => {
+                        this.user = null;
+                        this.user_id = 0;
+
                         this.access_token = response.data.access_token;
                         this.refresh_token = response.data.refresh_token;
                         this.user_id = response.data.id;

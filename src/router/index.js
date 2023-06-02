@@ -6,6 +6,7 @@ import Transfer from '../components/Transfer.vue';
 import Account from '../components/Account.vue';
 import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
+import UserManagement from '../components/UserManagement.vue';
 //import TransferHistoryList from '../components/TransferHistoryList.vue';
 
 /*import ProductList from '../components/products/ProductList.vue';
@@ -18,7 +19,8 @@ const routes = [
   { path: '/transfer', component: Transfer },
   { path: '/account', component: Account },
   { path: '/login', component: Login },
-  { path: '/register', component: Register }
+  { path: '/register', component: Register },
+  { path: '/usermanagement', component: UserManagement }
   //{ path: '/transferlist', component: TransferHistoryList },
 ];
 
