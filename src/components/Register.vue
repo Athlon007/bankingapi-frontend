@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <h1>Register</h1>
         <div class="alert alert-danger" v-if="this.error">
             {{ this.error }}
         </div>
