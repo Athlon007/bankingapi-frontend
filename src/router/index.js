@@ -7,6 +7,8 @@ import Account from '../components/Account.vue';
 import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 import UserManagement from '../components/UserManagement.vue';
+import Settings from '../components/Settings.vue';
+import AccountDeleted from '../components/AccountDeleted.vue';
 //import TransferHistoryList from '../components/TransferHistoryList.vue';
 
 /*import ProductList from '../components/products/ProductList.vue';
@@ -20,8 +22,11 @@ const routes = [
   { path: '/account', component: Account },
   { path: '/login', component: Login },
   { path: '/register', component: Register },
-  { path: '/usermanagement', component: UserManagement }
+  { path: '/usermanagement', component: UserManagement },
+  { path: '/settings', component: Settings },
+  { path: '/accountdeleted', component: AccountDeleted },
   //{ path: '/transferlist', component: TransferHistoryList },
+  { path: '/:pathMatch(.*)*', redirect: '/' } // 404
 ];
 
 const router = createRouter({
