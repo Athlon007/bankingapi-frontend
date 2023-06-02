@@ -59,6 +59,11 @@ export const useUserSessionStore = defineStore('usersession', {
 
                         this.getUser();
 
+                        // Set timer to refresh token.
+                        setTimeout(() => {
+                            this.refresh();
+                        }, this.expires_at - Date.now() - 1000);
+
                         useEmitter().emit('login', this.user_id);
                         resolve();
                     })

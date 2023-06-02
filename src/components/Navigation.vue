@@ -75,6 +75,7 @@ export default {
     logoutClick() {
       useUserSessionStore().logout();
       this.logout();
+      this.$router.push("/");
     },
     loadUser() {
       useUserSessionStore().getUser().then(user => {
