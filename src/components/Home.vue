@@ -2,7 +2,7 @@
   <section>
     <div class="row">
       <img src="/logo.png" alt="logo" class="logo" />
-      <h2 class="tagline">Taking 2300 EUR from you per year!</h2>
+      <h2 class="tagline">Taking 2300 {{ this.currencySymbol }} from you per year!</h2>
     </div>
     <div class="row">
       <div class="container navs">
@@ -25,28 +25,19 @@
 
 <script>
 import { useUserSessionStore } from "../stores/usersession.js";
-import useEmitter from '../emitter.js';
 
 export default {
   name: "Home",
   data() {
     return {
-      user: null,
       // EUR
       currencySymbol: "\u20AC"
     };
   },
   mounted() {
-
-    useUserSessionStore().getUser().then(user => {
-      this.user = user;
-    });
-
-    useEmitter().on("login", user_id => {
-      useUserSessionStore().getUser().then(user => {
-        this.user = user;
-      });
-    });
+    if (useUserSessionStore().isAuthenticated) {
+      this.$router.push("/dashboard");
+    }
   },
 };
 </script>
