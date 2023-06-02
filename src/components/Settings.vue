@@ -64,7 +64,27 @@
                 <button type="button" class="btn btn-primary" v-on:click="updateAccount">Update</button>
             </form>
         </div>
+        <div class="row py-2">
+            <div class="">
+                <button class="btn btn-danger" @click="toggleDialog(true)"> {{ userHasAccount ? "Deactivate Account" :
+                    "Remove Account" }} </button>
+            </div>
+        </div>
     </div>
+    <dialog id="delete-account-dialog">
+        <div class="row">
+            <h2>Warning</h2>
+        </div>
+        <hr />
+        <div class="row">
+            <p>Are you sure you want to <strong>{{ userHasAccount ? "deactivate" : "remove" }}</strong> your account?</p>
+            <p v-if="userHasAccount">This action can only be reverted by contacting customer support.</p>
+        </div>
+        <div class="row d-flex justify-content-evenly">
+            <button class="btn btn-danger w-25">Yes</button>
+            <button class="btn btn-primary w-25">No</button>
+        </div>
+    </dialog>
 </template>
 
 <script>
@@ -87,7 +107,8 @@ export default {
                 birth_date: ""
             },
             error: "",
-            password_confirm: ""
+            password_confirm: "",
+            userHasAccount: false
         }
     },
     methods: {
@@ -112,6 +133,14 @@ export default {
                 .catch(error => {
                     this.error = error.response.data.error_message;
                 });
+        },
+        toggleDialog(enabled) {
+            const dialog = document.getElementById("delete-account-dialog");
+            if (enabled) {
+                dialog.showModal();
+            } else {
+                dialog.close();
+            }
         }
     },
     async mounted() {
@@ -124,6 +153,7 @@ export default {
         axios.get("/users/" + useUserSessionStore().getUserId)
             .then(response => {
                 this.userRequest = response.data;
+                this.userHasAccount = response.data.current_account != null;
             })
             .catch(error => {
                 this.error = error.response.data.error_message;
@@ -132,4 +162,12 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+dialog {
+    border-width: 0px;
+    border-radius: calc(5px * var(3.74));
+    box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 1.6rem;
+    max-width: 400px
+}
+</style>
