@@ -21,6 +21,11 @@
             <router-link to="/transferlist" class="nav-link" active-class="active" v-if="isLoggedIn">Transfer
               List</router-link>
           </li>
+          <li class="nav-item">
+            <router-link to="/usermanagement" class="nav-link" active-class="active"
+              v-if="isLoggedIn && isEmployeeOrAdmin">User
+              Management</router-link>
+          </li>
         </ul>
         <ul class="navbar-nav">
           <div class="d-inline" v-if="isLoggedIn">
@@ -56,6 +61,7 @@ export default {
   data() {
     return {
       isLoggedIn: false,
+      isEmployeeOrAdmin: false,
       user: {}
     };
   },
@@ -69,6 +75,7 @@ export default {
       // getuser is a promise
       useUserSessionStore().getUser().then(user => {
         this.user = user;
+        this.isEmployeeOrAdmin = user.role === "EMPLOYEE" || user.role === "ADMIN";
       });
     }
   },

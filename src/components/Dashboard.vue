@@ -4,9 +4,12 @@
       <div class="row">
         <h2 class="mt-3 mt-lg-5">Welcome, {{ user?.firstname }}</h2>
       </div>
-      <div v-if="user?.current_account == null && user?.saving_account == null && user?.role === 'USER'">
-        <div class="card">
+      <div v-if="user?.current_account == null && user?.saving_account == null">
+        <div class="card" v-if="user?.role === 'USER'">
           <p>Sorry, you must wait for an employee to open your account.</p>
+        </div>
+        <div class="card" v-else="user?.role === 'EMPLOYEE'">
+          <p>Go into Account management to create an account.</p>
         </div>
       </div>
       <div v-else>

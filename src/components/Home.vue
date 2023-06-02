@@ -51,7 +51,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .logo {
   width: 100%;
   max-width: 400px;
