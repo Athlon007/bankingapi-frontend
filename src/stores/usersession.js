@@ -13,9 +13,10 @@ export const useUserSessionStore = defineStore('usersession', {
     getters: {
         isAuthenticated: (state) => state.access_token !== '',
         getUserId: (state) => state.user_id,
+        isExpired: (state) => Date.now() > state.expires_at,
     },
     actions: {
-        localLogin() {
+        async localLogin() {
             if (!localStorage['access_token'] || !localStorage['refresh_token'] || !localStorage['expires_at'].length || !localStorage['id'].length) {
                 return;
             }
@@ -26,8 +27,7 @@ export const useUserSessionStore = defineStore('usersession', {
 
             if (Date.now() > this.expires_at) {
                 console.log('Token expired at. Trying to refresh.');
-                this.refresh();
-                return;
+                await this.refresh();
             }
 
 
@@ -67,15 +67,25 @@ export const useUserSessionStore = defineStore('usersession', {
                     });
             });
         },
+        invalidateUser() {
+            this.user = null;
+        },
         logout() {
             this.access_token = '';
             this.refresh_token = '';
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
+            localStorage.removeItem('expires_at');
             axios.defaults.headers.common['Authorization'] = '';
         },
         refresh() {
             return new Promise((resolve, reject) => {
+                if (!this.refresh_token) {
+                    this.logout();
+                    reject('No refresh token.');
+                    return;
+                }
+
                 axios
                     .post("/auth/refresh", {
                         refresh_token: this.refresh_token
@@ -92,20 +102,22 @@ export const useUserSessionStore = defineStore('usersession', {
 
                         console.log('Refreshed token.');
 
+                        useEmitter().emit('login', this.user_id);
+
                         resolve();
                     }
                     )
                     .catch((error) => {
                         this.logout();
-                        reject(error.response.data.errorMessage);
+                        reject("Could not refresh token.");
                     }
                     );
             });
         },
-        getUser() {
-            if (Date.now() > this.expires_at) {
+        async getUser() {
+            if (Date.now() > this.expires_at || this.user == null) {
                 console.log('Token expired at. Trying to refresh.');
-                this.refresh()
+                await this.refresh()
             }
 
             return new Promise((resolve, reject) => {
