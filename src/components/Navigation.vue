@@ -87,6 +87,10 @@ export default {
     useEmitter().on("login", user_id => {
       this.loadUser();
     });
+    useEmitter().on("logout", () => {
+      this.user = null;
+      this.isEmployeeOrAdmin = false;
+    });
   }
 };
 </script>

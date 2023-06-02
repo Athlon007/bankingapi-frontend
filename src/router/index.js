@@ -24,6 +24,7 @@ const routes = [
   { path: '/usermanagement', component: UserManagement },
   { path: '/settings', component: Settings },
   //{ path: '/transferlist', component: TransferHistoryList },
+  { path: '/:pathMatch(.*)*', redirect: '/' } // 404
 ];
 
 const router = createRouter({

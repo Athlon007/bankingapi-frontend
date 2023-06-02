@@ -81,8 +81,8 @@
             <p v-if="userHasAccount">This action can only be reverted by contacting customer support.</p>
         </div>
         <div class="row d-flex justify-content-evenly">
-            <button class="btn btn-danger w-25">Yes</button>
-            <button class="btn btn-primary w-25">No</button>
+            <button class="btn btn-danger w-25" @click="deleteAccount()">Yes</button>
+            <button class="btn btn-primary w-25" @click="toggleDialog(false)">No</button>
         </div>
     </dialog>
 </template>
@@ -141,6 +141,19 @@ export default {
             } else {
                 dialog.close();
             }
+        },
+        deleteAccount() {
+            this.toggleDialog(false);
+            axios.delete("/users/" + useUserSessionStore().getUserId)
+                .then(response => {
+                    this.error = "";
+                    this.$router.push("/");
+                    useUserSessionStore().logout();
+                    useEmitter().emit("logout");
+                })
+                .catch(error => {
+                    this.error = error.response.data.error_message;
+                });
         }
     },
     async mounted() {
@@ -165,7 +178,7 @@ export default {
 <style scoped>
 dialog {
     border-width: 0px;
-    border-radius: calc(5px * var(3.74));
+    border-radius: calc(5px * 3.14);
     box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     padding: 1.6rem;
     max-width: 400px
