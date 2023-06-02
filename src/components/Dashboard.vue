@@ -1,3 +1,7 @@
+<script setup>
+import LimitsCard from "./products/LimitsCard.vue";
+</script>
+
 <template>
   <section>
     <div class="container">
@@ -35,6 +39,12 @@
             </div>
           </div>
         </div>
+        <hr />
+        <div class="row my-4">
+          <div class="col">
+            <LimitsCard />
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -46,6 +56,9 @@ import useEmitter from '../emitter.js';
 
 export default {
   name: "Home",
+  components: {
+    LimitsCard
+  },
   data() {
     return {
       user: null,
