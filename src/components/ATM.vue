@@ -17,8 +17,9 @@
         <div class="card p-4 atm-card">
           <h3 class="text-center mb-4">Withdraw or Deposit</h3>
           <div class="account-info mb-4">
-            <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{ currencySymbol }}
-              </p>
+            <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{ currencySymbol
+            }}
+            </p>
             <p class="text-center"><strong>IBAN:</strong> {{ user?.current_account.IBAN }}</p>
           </div>
           <form @submit.prevent="processTransaction">
@@ -75,9 +76,8 @@ export default {
         axios
           .post("transactions/withdraw", transactionData)
           .then(response => {
-            this.user = response.data;
-            this.$router.go();
-            //TODO: Automatically refresh the page
+            // this.user.current_account.balance = response.data.balance;
+          
           })
           .catch(error => {
             this.error = error.response.data.error_message;
@@ -86,9 +86,7 @@ export default {
         axios
           .post("/transactions/deposit", transactionData)
           .then(response => {
-            this.user = response.data;
-            this.$router.go();
-            //TODO: Automatically refresh the page
+            this.user.current_account.balance = response.data.balance;
           })
           .catch(error => {
             this.error = error.response.data.error_message;
