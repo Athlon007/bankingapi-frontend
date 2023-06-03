@@ -17,8 +17,8 @@
         <div class="card p-4 atm-card">
           <h3 class="text-center mb-4">Withdraw or Deposit</h3>
           <div class="account-info mb-4">
-            <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{
-              user?.current_account.currency_type }}</p>
+            <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{ currencySymbol }}
+              </p>
             <p class="text-center"><strong>IBAN:</strong> {{ user?.current_account.IBAN }}</p>
           </div>
           <form @submit.prevent="processTransaction">
@@ -49,8 +49,8 @@ export default {
     return {
       user: null,
       amount: 0,
-      currency: "EURO",
-      iban: ""
+      currency: "",
+      currencySymbol: "\u20AC"
     };
   },
   mounted() {
@@ -60,6 +60,7 @@ export default {
 
     useUserSessionStore().getUser().then(user => {
       this.user = user;
+      this.currency = user.current_account.currency_type;
     });
   },
   methods: {
