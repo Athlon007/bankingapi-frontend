@@ -345,7 +345,9 @@ export default {
 
             let user_id = this.edited_user.id;
 
-            axios.put(`/accounts/${user_id}/${account_id}`, isActive,
+            axios.put(`/accounts/${user_id}/${account_id}`, {
+                isActive: isActive
+            },
                 {
                     headers: {
                         'Content-Type': 'application/json'
