@@ -122,9 +122,9 @@ import useEmitter from '../emitter';
                         <p><strong>Balance:</strong> {{ this.edited_user.current_account.balance }}</p>
                         <p><strong>Active: </strong> {{ this.edited_user.current_account.isActive ? "Yes" : "No" }}</p>
                         <div class="col-12">
-                            <button type="button" class="btn btn-danger" @click="deactivateAccount('current')"
+                            <button type="button" class="btn btn-danger" @click="setAccountActive(false, 'current')"
                                 v-if="this.edited_user.current_account.isActive">Deactivate Account</button>
-                            <button type="button" class="btn btn-success" @click="activateAccount('current')"
+                            <button type="button" class="btn btn-success" @click="setAccountActive(true, 'current')"
                                 v-else>Activate
                                 Account</button>
                         </div>
@@ -145,9 +145,10 @@ import useEmitter from '../emitter';
                         <p><strong>Balance:</strong> {{ this.edited_user.saving_account.balance }}</p>
                         <p><strong>Active: </strong> {{ this.edited_user.saving_account.isActive ? "Yes" : "No" }}</p>
                         <div class="col-12">
-                            <button type="button" class="btn btn-danger" @click="deactivateAccount('saving')"
+                            <button type="button" class="btn btn-danger" @click="setAccountActive(false, 'saving')"
                                 v-if="this.edited_user.saving_account.isActive">Deactivate Account</button>
-                            <button type="button" class="btn btn-success" @click="editAccount" v-else>Activate
+                            <button type="button" class="btn btn-success" @click="setAccountActive(true, 'saving')"
+                                v-else>Activate
                                 Account</button>
                         </div>
                     </div>
@@ -256,23 +257,54 @@ export default {
 
             const request = {
                 accountType: account_type.toUpperCase(),
-                IBAN: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
                 userId: this.edited_user.id,
                 currencyType: "EURO"
             }
 
             axios.post(`/accounts`, request)
                 .then(response => {
-                    if (account_type === "current")
+                    if (account_type === "current") {
                         this.edited_user.current_account = response.data;
-                    else
+                        this.users.find(user => user.id === this.edited_user.id).current_account = response.data;
+                    }
+                    else {
                         this.edited_user.saving_account = response.data;
+                        this.users.find(user => user.id === this.edited_user.id).saving_account = response.data;
+                    }
                 })
                 .catch(error => {
                     this.error = error.response.data.error_message;
                 });
         },
-        deactivateAccount(account_type) { },
+        setAccountActive(isActive, account_type) {
+            let account_id = null;
+            if (account_type === "current")
+                account_id = this.edited_user.current_account.id;
+            else
+                account_id = this.edited_user.saving_account.id;
+
+            let user_id = this.edited_user.id;
+
+            axios.put(`/accounts/${user_id}/${account_id}`, isActive,
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (account_type === "current") {
+                        this.edited_user.current_account = response.data;
+                        this.users.find(user => user.id === this.edited_user.id).current_account = response.data;
+                    }
+                    else {
+                        this.edited_user.saving_account = response.data;
+                        this.users.find(user => user.id === this.edited_user.id).saving_account = response.data;
+                    }
+                })
+                .catch(error => {
+                    this.error = error.response.data.error_message;
+                });
+        },
         save() {
             this.error = "";
 
@@ -294,6 +326,10 @@ export default {
             axios.put(`/users/${this.edited_user.id}`, request)
                 .then(response => {
                     useEmitter().emit("user-edit-save");
+
+                    // Replace the user in the list with the updated one.
+                    const index = this.users.findIndex(user => user.id === this.edited_user.id);
+                    this.users[index] = response.data;
                 })
                 .catch(error => {
                     this.error = error.response.data.error_message;
