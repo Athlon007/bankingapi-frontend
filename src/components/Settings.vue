@@ -127,6 +127,8 @@ export default {
             })
                 .then(response => {
                     this.error = "";
+                    console.log(response.data);
+                    useUserSessionStore().user = response.data;
                     this.$router.push("/dashboard");
                     useEmitter().emit("login");
                 })
