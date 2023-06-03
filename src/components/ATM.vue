@@ -9,7 +9,8 @@
           <div class="card p-4 atm-card">
             <h3 class="text-center mb-4">Withdraw or Deposit</h3>
             <div class="account-info mb-4">
-              <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{ user?.current_account.currency_type }}</p>
+              <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{
+                user?.current_account.currency_type }}</p>
               <p class="text-center"><strong>IBAN:</strong> {{ user?.current_account.IBAN }}</p>
             </div>
             <form @submit.prevent="processTransaction">
@@ -18,8 +19,8 @@
                 <input type="number" id="amount" class="form-control" v-model="amount" required>
               </div>
               <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg withdraw-btn">Withdraw</button>
-                <button type="submit" class="btn btn-primary btn-lg deposit-btn">Deposit</button>
+                <button type="submit" class="btn btn-primary btn-lg withdraw-btn" @click.prevent="processTransaction('withdraw')">Withdraw</button>
+                <button type="submit" class="btn btn-primary btn-lg deposit-btn" @click.prevent="processTransaction('deposit')">Deposit</button>
               </div>
             </form>
           </div>
@@ -30,28 +31,57 @@
 </template>
 
 <script>
+import axios from '../axios_auth';
 import { useUserSessionStore } from "../stores/usersession.js";
 
 export default {
-    name: "Account",
-    data() {
-        return {
-            user: null,
-            amount: 0,
-            currency: "EURO",
-            iban: "",
-        };
-    },
-    mounted() {
-        if (!useUserSessionStore().isAuthenticated) {
-            this.$router.push("/login");
-        }
+  name: "Account",
+  data() {
+    return {
+      user: null,
+      amount: 0,
+      currency: "EURO",
+      iban: "",
+    };
+  },
+  mounted() {
+    if (!useUserSessionStore().isAuthenticated) {
+      this.$router.push("/login");
+    }
 
-        useUserSessionStore().getUser().then(user => {
-            this.user = user;
-        });
-    },
+    useUserSessionStore().getUser().then(user => {
+      this.user = user;
+    });
+  },
+  methods: {
+    processTransaction(transactionType) {
+      const transactionData = {
+        IBAN: this.user.current_account.IBAN,
+        amount: parseInt(this.amount),
+        currencyType: this.currency
+      };
 
+      if (transactionType === "withdraw") {
+        axios
+          .post("transactions/withdraw", transactionData)
+          .then(response => {
+            this.user.current_account.IBAN = response.data.IBAN;
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (transactionType === "deposit") {
+        axios
+          .post("/transactions/deposit", transactionData)
+          .then(response => {
+            this.user.current_account.IBAN = response.data.IBAN;
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+  },
+}
 };
 </script>
 
@@ -90,7 +120,8 @@ export default {
   border-radius: 0.3rem;
 }
 
-.btn-lg:focus, .btn-lg.focus {
+.btn-lg:focus,
+.btn-lg.focus {
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.5);
 }
