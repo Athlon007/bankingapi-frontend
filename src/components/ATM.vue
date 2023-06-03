@@ -4,26 +4,35 @@
       <div class="row">
         <h2 class="mt-3 mt-lg-5 text-center">INHOLLAND BANK ATM</h2>
       </div>
-      <div class="row my-4">
-        <div class="col-md-6 offset-md-3">
-          <div class="card p-4 atm-card">
-            <h3 class="text-center mb-4">Withdraw or Deposit</h3>
-            <div class="account-info mb-4">
-              <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{
-                user?.current_account.currency_type }}</p>
-              <p class="text-center"><strong>IBAN:</strong> {{ user?.current_account.IBAN }}</p>
-            </div>
-            <form @submit.prevent="processTransaction">
-              <div class="form-group">
-                <label for="amount">Amount</label>
-                <input type="number" id="amount" class="form-control" v-model="amount" required>
-              </div>
-              <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg withdraw-btn" @click.prevent="processTransaction('withdraw')">Withdraw</button>
-                <button type="submit" class="btn btn-primary btn-lg deposit-btn" @click.prevent="processTransaction('deposit')">Deposit</button>
-              </div>
-            </form>
+
+      <div class="row" v-if="this.error">
+        <div class="alert alert-danger">
+          {{ this.error }}
+        </div>
+      </div>
+
+    </div>
+    <div class="row my-4">
+      <div class="col-md-6 offset-md-3">
+        <div class="card p-4 atm-card">
+          <h3 class="text-center mb-4">Withdraw or Deposit</h3>
+          <div class="account-info mb-4">
+            <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{
+              user?.current_account.currency_type }}</p>
+            <p class="text-center"><strong>IBAN:</strong> {{ user?.current_account.IBAN }}</p>
           </div>
+          <form @submit.prevent="processTransaction">
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <input type="number" id="amount" class="form-control" v-model="amount" required>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary btn-lg withdraw-btn"
+                @click.prevent="processTransaction('withdraw')">Withdraw</button>
+              <button type="submit" class="btn btn-primary btn-lg deposit-btn"
+                @click.prevent="processTransaction('deposit')">Deposit</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -41,7 +50,7 @@ export default {
       user: null,
       amount: 0,
       currency: "EURO",
-      iban: "",
+      iban: ""
     };
   },
   mounted() {
@@ -57,7 +66,7 @@ export default {
     processTransaction(transactionType) {
       const transactionData = {
         IBAN: this.user.current_account.IBAN,
-        amount: parseInt(this.amount),
+        amount: this.amount,
         currencyType: this.currency
       };
 
@@ -65,27 +74,29 @@ export default {
         axios
           .post("transactions/withdraw", transactionData)
           .then(response => {
-            this.user.current_account.IBAN = response.data.IBAN;
+            this.user = response.data;
+            this.$router.go();
+            //TODO: Automatically refresh the page
           })
           .catch(error => {
-            console.log(error);
-          });
+            this.error = error.response.data.error_message;
+          })
       } else if (transactionType === "deposit") {
         axios
           .post("/transactions/deposit", transactionData)
           .then(response => {
-            this.user.current_account.IBAN = response.data.IBAN;
+            this.user = response.data;
+            this.$router.go();
+            //TODO: Automatically refresh the page
           })
           .catch(error => {
-            console.log(error);
+            this.error = error.response.data.error_message;
           });
       }
-  },
-}
+    },
+  }
 };
 </script>
-
-
 <style>
 .atm-card {
   background-color: #f2f2f2;
