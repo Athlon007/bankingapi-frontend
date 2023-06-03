@@ -43,124 +43,164 @@ import useEmitter from '../emitter';
                 </div>
             </div>
             <div class="col-6" :class="edited_user == null ? 'disabled' : ''">
-                <div class="row">
-                    <div class="col-12">
-                        <button type="button" class="btn btn-primary mx-2" @click="save"
-                            v-if="this.edited_user.active">Save</button>
-                        <button type="button" class="btn btn-success mx-2" @click="save" v-else>Activate</button>
-                        <button type="button" class="btn btn-light mx-2" @click="cancel">Cancel</button>
-                        <button type="button" class="btn btn-danger mx-2" @click="this.delete()">{{
-                            this.edited_user.current_account == null ? "Delete" : "Deactivate" }}</button>
+                <nav>
+                    <div class="nav nav-tabs" role="tablist" id="nav-tabs">
+                        <button class="nav-link active" id="user-tab" data-bs-toggle="tab" data-bs-target="#details"
+                            type="button" role="tab" aria-controls="user" aria-selected="true">Details</button>
+                        <button class="nav-link" id="accounts-tab" data-bs-toggle="tab" data-bs-target="#accounts"
+                            type="button" role="tab" aria-controls="accounts" aria-selected="false">Account</button>
+                        <button class="nav-link" id="limits-tab" data-bs-toggle="tab" data-bs-target="#limits" type="button"
+                            role="tab" aria-controls="limits" aria-selected="false"
+                            v-if="this.edited_user.current_account != null">Limits</button>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" class="d-input w-100"
-                        v-model="this.edited_user.username" @keyup.enter="register" />
-                </div>
-                <div class="form-group">
-                    <label for="email">E-Mail</label>
-                    <input type="email" id="email" name="email" class="d-input w-100" v-model="this.edited_user.email"
-                        @keyup.enter="register" />
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="d-input w-100"
-                        v-model="this.edited_user.password" @keyup.enter="register" />
-                </div>
-                <div class="form-group">
-                    <label for="password">Confirm Password</label>
-                    <input type="password" id="password" name="password" class="d-input w-100"
-                        v-model="this.password_confirm" @keyup.enter="register" />
-                </div>
-                <div class="form-group">
-                    <label for="firstname">First Name</label>
-                    <input type="text" id="firstname" name="firstname" class="d-input w-100"
-                        v-model="this.edited_user.firstname" @keyup.enter="register" />
-                </div>
-                <div class="form-group">
-                    <label for="lastname">Last Name</label>
-                    <input type="text" id="lastname" name="lastname" class="d-input w-100"
-                        v-model="this.edited_user.lastname" @keyup.enter="register" />
-                </div>
-                <div class="form-group">
-                    <label for="bsn">BSN</label>
-                    <input type="number" id="bsn" name="bsn" class="d-input w-100" v-model="this.edited_user.bsn"
-                        @keyup.enter="register" @keypress="isValidBsn($event)" />
-                </div>
-                <div class="form-group">
-                    <label for="phone_number">Phone Number</label>
-                    <input type="tel" id="phone_number" name="phone_number" class="d-input w-100"
-                        v-model="this.edited_user.phone_number" @keyup.enter="register" />
-                </div>
-                <div class="form-group">
-                    <label for="birth_date">Birth Date</label>
-                    <input type="date" id="birth_date" name="birth_date" class="d-input w-100"
-                        v-model="this.edited_user.birth_date" @keyup.enter="register" />
-                </div>
-                <div class="form-group" v-if="this.isCurrentUserAdmin">
-                    <label for="role">Role</label>
-                    <select id="role" name="role" class="d-input w-100" v-model="this.edited_user.role"
-                        @keyup.enter="register">
-                        <option value="ADMIN">Admin</option>
-                        <option value="EMPLOYEE">Employee</option>
-                        <option value="USER">User</option>
-                    </select>
-                </div>
-                <div class="card my-2 p-2">
-                    <div class="row">
-                        <h3>Current Account</h3>
-                    </div>
-                    <div class="row" v-if="this.edited_user.current_account == null">
-                        <p>No Account</p>
-                        <button type="button" class="btn btn-primary" @click="createAccount('current')">Create
-                            Account</button>
-                    </div>
-                    <div class="row" v-else>
-                        <p><strong>Account ID:</strong> {{ this.edited_user.current_account.id }}</p>
-                        <p><strong>IBAN:</strong> {{ this.edited_user.current_account.IBAN }}</p>
-                        <p><strong>Balance:</strong> {{ this.edited_user.current_account.balance }}</p>
-                        <p><strong>Active: </strong> {{ this.edited_user.current_account.isActive ? "Yes" : "No" }}</p>
-                        <div class="col-12">
-                            <button type="button" class="btn btn-danger" @click="setAccountActive(false, 'current')"
-                                v-if="this.edited_user.current_account.isActive">Deactivate Account</button>
-                            <button type="button" class="btn btn-success" @click="setAccountActive(true, 'current')"
-                                v-else>Activate
-                                Account</button>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active container" id="details" role="tabpanel">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" class="d-input w-100"
+                                v-model="this.edited_user.username" @keyup.enter="register" />
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-Mail</label>
+                            <input type="email" id="email" name="email" class="d-input w-100"
+                                v-model="this.edited_user.email" @keyup.enter="register" />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" class="d-input w-100"
+                                v-model="this.edited_user.password" @keyup.enter="register" />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Confirm Password</label>
+                            <input type="password" id="password" name="password" class="d-input w-100"
+                                v-model="this.password_confirm" @keyup.enter="register" />
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname">First Name</label>
+                            <input type="text" id="firstname" name="firstname" class="d-input w-100"
+                                v-model="this.edited_user.firstname" @keyup.enter="register" />
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Last Name</label>
+                            <input type="text" id="lastname" name="lastname" class="d-input w-100"
+                                v-model="this.edited_user.lastname" @keyup.enter="register" />
+                        </div>
+                        <div class="form-group">
+                            <label for="bsn">BSN</label>
+                            <input type="number" id="bsn" name="bsn" class="d-input w-100" v-model="this.edited_user.bsn"
+                                @keyup.enter="register" @keypress="isValidBsn($event)" />
+                        </div>
+                        <div class="form-group">
+                            <label for="phone_number">Phone Number</label>
+                            <input type="tel" id="phone_number" name="phone_number" class="d-input w-100"
+                                v-model="this.edited_user.phone_number" @keyup.enter="register" />
+                        </div>
+                        <div class="form-group">
+                            <label for="birth_date">Birth Date</label>
+                            <input type="date" id="birth_date" name="birth_date" class="d-input w-100"
+                                v-model="this.edited_user.birth_date" @keyup.enter="register" />
+                        </div>
+                        <div class="form-group" v-if="this.isCurrentUserAdmin">
+                            <label for="role">Role</label>
+                            <select id="role" name="role" class="d-input w-100" v-model="this.edited_user.role"
+                                @keyup.enter="register">
+                                <option value="ADMIN">Admin</option>
+                                <option value="EMPLOYEE">Employee</option>
+                                <option value="USER">User</option>
+                            </select>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-primary mx-2" @click="save"
+                                    v-if="this.edited_user.active">Save</button>
+                                <button type="button" class="btn btn-success mx-2" @click="save" v-else>Activate</button>
+                                <button type="button" class="btn btn-light mx-2" @click="cancel">Cancel</button>
+                                <button type="button" class="btn btn-danger mx-2" @click="this.delete()">{{
+                                    this.edited_user.current_account == null ? "Delete" : "Deactivate" }}</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card my-2 p-2" v-if="this.edited_user.current_account != null">
-                    <div class="row">
-                        <h3>Saving Account</h3>
-                    </div>
-                    <div class="row" v-if="this.edited_user.saving_account == null">
-                        <p>No Account</p>
-                        <button type="button" class="btn btn-primary" @click="createAccount('saving')">Create
-                            Account</button>
-                    </div>
-                    <div class="row" v-else>
-                        <p><strong>Account ID:</strong> {{ this.edited_user.saving_account.id }}</p>
-                        <p><strong>IBAN:</strong> {{ this.edited_user.saving_account.IBAN }}</p>
-                        <p><strong>Balance:</strong> {{ this.edited_user.saving_account.balance }}</p>
-                        <p><strong>Active: </strong> {{ this.edited_user.saving_account.isActive ? "Yes" : "No" }}</p>
-                        <div class="col-12">
-                            <button type="button" class="btn btn-danger" @click="setAccountActive(false, 'saving')"
-                                v-if="this.edited_user.saving_account.isActive">Deactivate Account</button>
-                            <button type="button" class="btn btn-success" @click="setAccountActive(true, 'saving')"
-                                v-else>Activate
-                                Account</button>
+                    <div class="tab-pane fade" id="accounts" role="tabpanel">
+                        <div class="card my-2 p-2">
+                            <div class="row">
+                                <h3>Current Account</h3>
+                            </div>
+                            <div class="row" v-if="this.edited_user.current_account == null">
+                                <p>No Account</p>
+                                <button type="button" class="btn btn-primary" @click="createAccount('current')">Create
+                                    Account</button>
+                            </div>
+                            <div class="row" v-else>
+                                <p><strong>Account ID:</strong> {{ this.edited_user.current_account.id }}</p>
+                                <p><strong>IBAN:</strong> {{ this.edited_user.current_account.IBAN }}</p>
+                                <p><strong>Balance:</strong> {{ this.edited_user.current_account.balance }}</p>
+                                <p><strong>Active: </strong> {{ this.edited_user.current_account.isActive ? "Yes" : "No" }}
+                                </p>
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-danger" @click="setAccountActive(false, 'current')"
+                                        v-if="this.edited_user.current_account.isActive">Deactivate Account</button>
+                                    <button type="button" class="btn btn-success" @click="setAccountActive(true, 'current')"
+                                        v-else>Activate
+                                        Account</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-2 p-2" v-if="this.edited_user.current_account != null">
+                            <div class="row">
+                                <h3>Saving Account</h3>
+                            </div>
+                            <div class="row" v-if="this.edited_user.saving_account == null">
+                                <p>No Account</p>
+                                <button type="button" class="btn btn-primary" @click="createAccount('saving')">Create
+                                    Account</button>
+                            </div>
+                            <div class="row" v-else>
+                                <p><strong>Account ID:</strong> {{ this.edited_user.saving_account.id }}</p>
+                                <p><strong>IBAN:</strong> {{ this.edited_user.saving_account.IBAN }}</p>
+                                <p><strong>Balance:</strong> {{ this.edited_user.saving_account.balance }}</p>
+                                <p><strong>Active: </strong> {{ this.edited_user.saving_account.isActive ? "Yes" : "No" }}
+                                </p>
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-danger" @click="setAccountActive(false, 'saving')"
+                                        v-if="this.edited_user.saving_account.isActive">Deactivate Account</button>
+                                    <button type="button" class="btn btn-success" @click="setAccountActive(true, 'saving')"
+                                        v-else>Activate
+                                        Account</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <button type="button" class="btn btn-primary mx-2" @click="save"
-                            v-if="this.edited_user.active">Save</button>
-                        <button type="button" class="btn btn-success mx-2" @click="save" v-else>Activate</button>
-                        <button type="button" class="btn btn-light mx-2" @click="cancel">Cancel</button>
-                        <button type="button" class="btn btn-danger mx-2" @click="this.delete()">{{
-                            this.edited_user.current_account == null ? "Delete" : "Deactivate" }}</button>
+                    <div class="tab-pane fade" id="limits" role="tabpanel">
+                        <form id="limits-form">
+                            <div class="form-group">
+                                <label for="transaction_limit">Transaction Limit</label>
+                                <input type="number" id="transaction_limit" name="transaction_limit" class="d-input w-100"
+                                    v-model="this.edited_user_limits.transaction_limit" @keyup.enter="register" />
+                            </div>
+                            <div class="form-group">
+                                <label for="daily_transaction_limit">Daily Transaction Limit</label>
+                                <input type="number" id="daily_transaction_limit" name="daily_transaction_limit"
+                                    class="d-input w-100" v-model="this.edited_user_limits.daily_transaction_limit"
+                                    @keyup.enter="register" min="0" />
+                            </div>
+                            <div class="form-group">
+                                <label for="absolute_limit">Absolute Limit</label>
+                                <input type="number" id="absolute_limit" name="absolute_limit" class="d-input w-100"
+                                    v-model="this.edited_user_limits.absolute_limit" @keyup.enter="register" max="0" />
+                            </div>
+                            <div class="form-group">
+                                <label for="remaining_daily_limit">Remaining Daily Limit</label>
+                                <input type="number" id="remaining_daily_limit" name="remaining_daily_limit"
+                                    class="d-input w-100"
+                                    v-model="this.edited_user_limits.remaining_daily_transaction_limit" max="0" readonly
+                                    disabled />
+                            </div>
+                            <div class="d-flex py-2">
+                                <button type="button" class="btn btn-primary mx-2" @click="saveLimits">Save</button>
+                                <button type="button" class="btn btn-light mx-2" @click="cancelLimits">Cancel</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -203,7 +243,9 @@ export default {
             lastQuery: {},
             edited_user: {},
             isCurrentUserAdmin: false,
-            password_confirm: ""
+            password_confirm: "",
+            edited_user_limits: {},
+            limits_copy: {}
         }
     },
     methods: {
@@ -354,6 +396,22 @@ export default {
         },
         closeDialog() {
             document.getElementById("delete-account-dialog").close();
+        },
+        saveLimits() {
+            this.error = "";
+
+            axios.put(`/users/${this.edited_user.id}/limits`, this.edited_user_limits)
+                .then(response => {
+                    this.edited_user_limits = response.data;
+                    this.limits_copy = JSON.parse(JSON.stringify(this.edited_user_limits));
+                })
+                .catch(error => {
+                    this.error = error.response.data.error_message;
+                });
+        },
+        cancelLimits() {
+            // restore the limits
+            this.edited_user_limits = JSON.parse(JSON.stringify(this.limits_copy));
         }
     },
     async mounted() {
@@ -369,6 +427,20 @@ export default {
 
         useEmitter().on("activate-user", (user) => {
             this.edited_user = JSON.parse(JSON.stringify(user));
+
+            if (this.edited_user.current_account != null) {
+                // Load user limits from /users/{id}/limits
+                axios.get(`/users/${this.edited_user.id}/limits`)
+                    .then(response => {
+                        this.edited_user_limits = response.data;
+                        this.limits_copy = JSON.parse(JSON.stringify(response.data));
+                    })
+                    .catch(error => {
+                        this.error = error.response.data.error_message;
+                    });
+            } else {
+                this.edited_user_limits = {};
+            }
         });
 
         useEmitter().on("user-edit-end", () => {
