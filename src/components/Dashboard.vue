@@ -29,7 +29,7 @@ import LimitsCard from "./products/LimitsCard.vue";
               <h3>Current Account</h3>
               <p>{{ user?.current_account.IBAN }}</p>
               <h4 class="fw-bold">{{ user?.current_account.balance }} {{ currencySymbol }}</h4>
-              <p class="color-wanrning" v-if="user?.current_account.isActive == false">This account has been deactivated.
+              <p class="color-warning" v-if="user?.current_account.isActive == false">This account has been deactivated.
                 Contanct customer
                 support.</p>
             </div>
@@ -39,7 +39,7 @@ import LimitsCard from "./products/LimitsCard.vue";
               <h3>Saving Account</h3>
               <p>{{ user?.saving_account.IBAN }}</p>
               <h4 class="fw-bold">{{ user?.saving_account.balance }} {{ currencySymbol }}</h4>
-              <p class="color-wanrning" v-if="user?.saving_account.isActive == false">This account has been deactivated.
+              <p class="color-warning" v-if="user?.saving_account.isActive == false">This account has been deactivated.
                 Contanct customer
                 support.</p>
             </div>
