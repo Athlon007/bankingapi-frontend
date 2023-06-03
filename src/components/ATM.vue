@@ -5,17 +5,16 @@
         <h2 class="mt-3 mt-lg-5 text-center">INHOLLAND BANK ATM</h2>
       </div>
 
-      <div class="row" v-if="this.error">
-        <div class="alert alert-danger">
-          {{ this.error }}
-        </div>
-      </div>
-
     </div>
     <div class="row my-4">
       <div class="col-md-6 offset-md-3">
         <div class="card p-4 atm-card">
           <h3 class="text-center mb-4">Withdraw or Deposit</h3>
+          <div class="row" v-if="this.error">
+            <div class="alert alert-danger">
+              {{ this.error }}
+            </div>
+          </div>
           <div class="account-info mb-4">
             <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{ currencySymbol
             }}
@@ -76,8 +75,7 @@ export default {
         axios
           .post("transactions/withdraw", transactionData)
           .then(response => {
-            // this.user.current_account.balance = response.data.balance;
-          
+            this.user.current_account.balance = response.data.balance;
           })
           .catch(error => {
             this.error = error.response.data.error_message;
