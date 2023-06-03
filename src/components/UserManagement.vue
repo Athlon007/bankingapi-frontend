@@ -119,8 +119,10 @@ import useEmitter from '../emitter';
                                     v-if="this.edited_user.active">Save</button>
                                 <button type="button" class="btn btn-success mx-2" @click="save" v-else>Activate</button>
                                 <button type="button" class="btn btn-light mx-2" @click="cancel">Cancel</button>
-                                <button type="button" class="btn btn-danger mx-2" @click="this.delete()">{{
-                                    this.edited_user.current_account == null ? "Delete" : "Deactivate" }}</button>
+                                <button type="button"
+                                    v-if="isCurrentUserAdmin && this.edited_user.role === 'ADMIN' || this.edited_user.role !== 'ADMIN'"
+                                    class="btn btn-danger mx-2" @click="this.delete()">{{
+                                        this.edited_user.current_account == null ? "Delete" : "Deactivate" }}</button>
                             </div>
                         </div>
                     </div>
