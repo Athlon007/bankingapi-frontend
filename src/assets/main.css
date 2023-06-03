@@ -53,3 +53,11 @@ h2 {
 .fa-brands:hover {
   color: #929292;
 }
+
+.activeAccountText {
+    color: #247206;
+}
+
+.inactiveAccountText {
+    color: #f54242;
+}
