@@ -146,6 +146,9 @@ export const useUserSessionStore = defineStore('usersession', {
                         reject(error.response.data.errorMessage);
                     });
             });
+        },
+        updateUser(user) {
+            this.user = user;
         }
     }
 })
