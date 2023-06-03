@@ -7,7 +7,10 @@ import useEmitter from '../emitter';
 
 <template>
     <div class="container">
-        <h2>User Management</h2>
+        <div class="my-2">
+            <h2 class="d-inline">User Management</h2>
+            <button type="button" class="btn btn-primary mx-4" @click="this.addUser()">Add User</button>
+        </div>
         <div class="row" v-if="this.error">
             <div class="alert alert-danger">
                 {{ this.error }}
@@ -212,11 +215,14 @@ import useEmitter from '../emitter';
         </div>
         <hr />
         <div class="row">
-            <p>Are you sure you want to <strong>{{ hasNoAccount ? "remove" : "deactivate" }}</strong> this account?</p>
+            <p>Are you sure you want to <strong>{{ this.edited_user.current_account == null &&
+                this.edited_user.saving_account == null ? "remove" : "deactivate" }}</strong> this account?</p>
             <strong>
                 <p>{{ this.edited_user.firstname }} {{ this.edited_user.lastname }}</p>
             </strong>
-            <p v-if="!hasNoAccount">This action can only be reverted by contacting customer support.</p>
+            <p v-if="this.edited_user.current_account != null">This action can only be reverted by contacting customer
+                support.</p>
+            <p v-else>This action <strong>CANNOT</strong> be reverted.</p>
         </div>
         <div class="row d-flex justify-content-evenly">
             <button class="btn btn-danger w-25" @click="deleteAccount()">Yes</button>
@@ -308,6 +314,16 @@ export default {
                     if (account_type === "current") {
                         this.edited_user.current_account = response.data;
                         this.users.find(user => user.id === this.edited_user.id).current_account = response.data;
+
+                        // Request limits for current user.
+                        axios.get(`/users/${this.edited_user.id}/limits`)
+                            .then(response => {
+                                this.edited_user_limits = response.data;
+                                this.limits_copy = JSON.parse(JSON.stringify(this.edited_user_limits));
+                            })
+                            .catch(error => {
+                                this.error = error.response.data.error_message;
+                            });
                     }
                     else {
                         this.edited_user.saving_account = response.data;
@@ -387,6 +403,18 @@ export default {
         deleteAccount() {
             axios.delete(`/users/${this.edited_user.id}`)
                 .then(response => {
+
+                    // Check if user deletes himself.
+                    if (this.edited_user.id === useUserSessionStore().user.id) {
+                        useUserSessionStore().logout();
+                        useEmitter().emit('logout');
+                        this.$router.push("/login");
+                        return;
+                    }
+                    // Remove the user from the list.
+                    const index = this.users.findIndex(user => user.id === this.edited_user.id);
+                    this.users.splice(index, 1);
+
                     this.closeDialog();
                     useEmitter().emit("user-edit-save");
                 })
@@ -412,6 +440,9 @@ export default {
         cancelLimits() {
             // restore the limits
             this.edited_user_limits = JSON.parse(JSON.stringify(this.limits_copy));
+        },
+        addUser() {
+            this.$router.push("/register");
         }
     },
     async mounted() {
@@ -422,7 +453,7 @@ export default {
             this.$router.push("/");
         }
 
-        this.search();
+        await this.search();
         this.isCurrentUserAdmin = useUserSessionStore().user.role === "ADMIN";
 
         useEmitter().on("activate-user", (user) => {

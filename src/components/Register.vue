@@ -59,6 +59,15 @@
                     <input type="date" id="birth_date" name="birth_date" class="d-input w-100"
                         v-model="this.userRequest.birth_date" @keyup.enter="register" />
                 </div>
+                <div class="col-6 form-group" v-if="this.is_current_user_admin">
+                    <label for="role">Role</label>
+                    <select id="role" name="role" class="d-input w-100" v-model="this.userRequest.role"
+                        @keyup.enter="register">
+                        <option value="USER" selected>User</option>
+                        <option value="EMPLOYEE">Employee</option>
+                        <option value="ADMIN">Admin</option>
+                    </select>
+                </div>
             </div>
             <button type="button" class="btn btn-primary" v-on:click="register">Register</button>
         </form>
@@ -81,10 +90,12 @@ export default {
                 last_name: "",
                 bsn: "",
                 phone_number: "",
-                birth_date: ""
+                birth_date: "",
+                role: "USER"
             },
             error: "",
-            password_confirm: ""
+            password_confirm: "",
+            is_current_user_admin: false
         };
     },
     methods: {
@@ -105,6 +116,10 @@ export default {
                 return;
             }
 
+            if (!this.is_current_user_admin) {
+                delete this.userRequest.role; // Remove role from userRequest if current user is not admin.
+            }
+
             // Take userRequest to JSON and print in console.
             const body = JSON.stringify(this.userRequest);
 
@@ -114,7 +129,11 @@ export default {
                 .then((response) => {
                     // If response is OK, redirect to login page.
                     if (response.status === 201) {
-                        this.$router.push("/login");
+                        if (useUserSessionStore().isAuthenticated) {
+                            this.$router.push("/usermanagement", { params: { user_id: response.data.id } });
+                        } else {
+                            this.$router.push("/login");
+                        }
                     }
                 })
                 .catch((error) => {
@@ -125,8 +144,12 @@ export default {
         }
     },
     mounted() {
-        if (useUserSessionStore().isAuthenticated) {
+        if (useUserSessionStore().isAuthenticated && useUserSessionStore().user.role === "USER") {
             this.$router.push("/dashboard");
+        }
+
+        if (useUserSessionStore().isAuthenticated && useUserSessionStore().user.role === "ADMIN") {
+            this.is_current_user_admin = true;
         }
     }
 
