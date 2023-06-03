@@ -13,9 +13,10 @@ export const useUserSessionStore = defineStore('usersession', {
     getters: {
         isAuthenticated: (state) => state.access_token !== '',
         getUserId: (state) => state.user_id,
+        isExpired: (state) => Date.now() > state.expires_at,
     },
     actions: {
-        localLogin() {
+        async localLogin() {
             if (!localStorage['access_token'] || !localStorage['refresh_token'] || !localStorage['expires_at'].length || !localStorage['id'].length) {
                 return;
             }
@@ -26,8 +27,7 @@ export const useUserSessionStore = defineStore('usersession', {
 
             if (Date.now() > this.expires_at) {
                 console.log('Token expired at. Trying to refresh.');
-                this.refresh();
-                return;
+                await this.refresh();
             }
 
 
@@ -57,6 +57,13 @@ export const useUserSessionStore = defineStore('usersession', {
                         localStorage['id'] = response.data.id;
                         localStorage['expires_at'] = response.data.expires_at;
 
+                        this.getUser();
+
+                        // Set timer to refresh token.
+                        setTimeout(() => {
+                            this.refresh();
+                        }, this.expires_at - Date.now() - 1000);
+
                         useEmitter().emit('login', this.user_id);
                         resolve();
                     })
@@ -67,14 +74,24 @@ export const useUserSessionStore = defineStore('usersession', {
                     });
             });
         },
+        invalidateUser() {
+            this.user = null;
+        },
         logout() {
             this.access_token = '';
             this.refresh_token = '';
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
+            localStorage.removeItem('expires_at');
             axios.defaults.headers.common['Authorization'] = '';
         },
         refresh() {
+            // check if refresh token is even there.
+            if (!this.refresh_token) {
+                this.logout();
+                return Promise.reject("No refresh token.");
+            }
+
             return new Promise((resolve, reject) => {
                 axios
                     .post("/auth/refresh", {
@@ -92,25 +109,31 @@ export const useUserSessionStore = defineStore('usersession', {
 
                         console.log('Refreshed token.');
 
+                        useEmitter().emit('login', this.user_id);
+
                         resolve();
                     }
                     )
                     .catch((error) => {
                         this.logout();
-                        reject(error.response.data.errorMessage);
+                        reject("Could not refresh token.");
                     }
                     );
             });
         },
-        getUser() {
+        async getUser() {
             if (Date.now() > this.expires_at) {
                 console.log('Token expired at. Trying to refresh.');
-                this.refresh()
+                await this.refresh()
             }
 
             return new Promise((resolve, reject) => {
                 if (this.user != null) {
                     resolve(this.user);
+                }
+
+                if (this.user_id == 0) {
+                    reject("No user id.");
                 }
 
                 axios
@@ -123,6 +146,9 @@ export const useUserSessionStore = defineStore('usersession', {
                         reject(error.response.data.errorMessage);
                     });
             });
+        },
+        updateUser(user) {
+            this.user = user;
         }
     }
 })
