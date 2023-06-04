@@ -451,9 +451,9 @@ export default {
     },
     async mounted() {
         // we don't want regular users to access this page
-        if (useUserSessionStore().user == null || useUserSessionStore().user.role !== "ADMIN" && useUserSessionStore().user.role !== "EMPLOYEE") {
-            this.$router.push("/");
-        }
+        //if (useUserSessionStore().user == null || useUserSessionStore().user.role !== "ADMIN" && useUserSessionStore().user.role !== "EMPLOYEE") {
+        //    this.$router.push("/");
+        //}
 
         await this.search();
         this.isCurrentUserAdmin = useUserSessionStore().user.role === "ADMIN";
