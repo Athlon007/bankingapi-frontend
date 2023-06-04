@@ -21,8 +21,8 @@
               v-if="this.user != null">ATM</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/transferlist" class="nav-link" active-class="active" v-if="this.user != null">Transfer
-              List</router-link>
+            <router-link to="/transactionhistory" class="nav-link" active-class="active" v-if="this.user != null">Transaction History
+              </router-link>
           </li>
           <li class="nav-item">
             <router-link to="/usermanagement" class="nav-link" active-class="active"
