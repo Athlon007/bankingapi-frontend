@@ -2,14 +2,15 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Home from '../components/Home.vue';
 import Dashboard from '../components/Dashboard.vue';
-import Transfer from '../components/Transfer.vue';
+import Transfer from '../components/transactions/Transfer.vue';
 import ATM from '../components/ATM.vue';
 import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 import UserManagement from '../components/UserManagement.vue';
 import Settings from '../components/Settings.vue';
 import AccountDeleted from '../components/AccountDeleted.vue';
-//import TransferHistoryList from '../components/TransferHistoryList.vue';
+import TransactionHistory from '../components/transactions/TransactionHistory.vue';
+//import TransferHistoryList from '../components/TransactionHistory.vue';
 
 /*import ProductList from '../components/products/ProductList.vue';
 import CreateProduct from '../components/products/CreateProduct.vue';
@@ -25,7 +26,7 @@ const routes = [
   { path: '/usermanagement', component: UserManagement },
   { path: '/settings', component: Settings },
   { path: '/accountdeleted', component: AccountDeleted },
-  //{ path: '/transferlist', component: TransferHistoryList },
+  { path: '/transactionhistory', component: TransactionHistory },
   { path: '/:pathMatch(.*)*', redirect: '/' } // 404
 ];
 
