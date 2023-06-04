@@ -60,7 +60,12 @@ export default {
 
     useUserSessionStore().getUser().then(user => {
       this.user = user;
-      this.currency = user.current_account.currency_type;
+      if (user.current_account == null) {
+        this.$router.push("/accounts");
+      }
+      else{
+        this.currency = user.current_account.currency_type;
+      }
     });
   },
   methods: {
