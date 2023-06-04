@@ -1,5 +1,5 @@
 <script setup>
-import LimitsCard from "./products/LimitsCard.vue";
+import LimitsCard from "./users/LimitsCard.vue";
 </script>
 
 <template>

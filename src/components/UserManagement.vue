@@ -1,8 +1,5 @@
 <script setup>
-import { useUserSessionStore } from '../stores/usersession'
-import UserManagementListItem from './products/UserManagementListItem.vue';
-import axios from '../axios_auth';
-import useEmitter from '../emitter';
+
 </script>
 
 <template>
@@ -234,6 +231,11 @@ import useEmitter from '../emitter';
 </template>
 
 <script>
+import UserManagementListItem from './users/UserManagementListItem.vue';
+import { useUserSessionStore } from '../stores/usersession'
+import axios from '../axios_auth';
+import useEmitter from '../emitter';
+
 export default {
     name: "UserManagement",
     components: {
@@ -278,12 +280,14 @@ export default {
             this.doQuery(params);
         },
         doQuery(params) {
+            console.log("doing query");
             this.lastQuery = params;
 
             axios.get(`/users`, {
                 params: params
             })
                 .then(response => {
+                    console.log("response: " + response.data);
                     this.users = response.data;
 
                     if (this.users.length < this.limit) {
@@ -451,9 +455,10 @@ export default {
     },
     async mounted() {
         // we don't want regular users to access this page
-        //if (useUserSessionStore().user == null || useUserSessionStore().user.role !== "ADMIN" && useUserSessionStore().user.role !== "EMPLOYEE") {
-        //    this.$router.push("/");
-        //}
+        await useUserSessionStore().loadUser();
+        if (useUserSessionStore().user == null || useUserSessionStore().user.role !== "ADMIN" && useUserSessionStore().user.role !== "EMPLOYEE") {
+            this.$router.push("/");
+        }
 
         await this.search();
         this.isCurrentUserAdmin = useUserSessionStore().user.role === "ADMIN";
