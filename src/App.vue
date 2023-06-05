@@ -18,7 +18,7 @@ export default {
   <RouterView />
   <div class="container">
     <footer class="py-3 my-4">
-      <p class="text-center text-body-secondary">© 2023 IT2A Group I actually forgot</p>
+      <p class="text-center text-body-secondary">© 2023 IT2A Group 2</p>
       <p class="text-center text-body-secondary">This website is not actually InHolland's website, instead it is an
         university project.</p>
       <p class="text-center text-body-secondary">If something doesn't work, <a
