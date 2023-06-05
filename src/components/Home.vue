@@ -2,7 +2,7 @@
   <section>
     <div class="row">
       <img src="/logo.png" alt="logo" class="logo" />
-      <h2 class="tagline">Taking 2300 {{ this.currencySymbol }} from you per year!</h2>
+      <h2 class="tagline">Taking 2300 {{ this.currencySymbol }} from you every year!</h2>
     </div>
     <div class="row">
       <div class="container navs">
