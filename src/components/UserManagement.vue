@@ -361,7 +361,6 @@
           </div>
         </div>
       </div>
-    </div>
     <dialog id="delete-account-dialog">
       <div class="row">
         <h2>Warning</h2>
