@@ -455,7 +455,7 @@ export default {
     },
     async mounted() {
         // we don't want regular users to access this page
-        await useUserSessionStore().loadUser();
+        await useUserSessionStore().localLogin();
         if (useUserSessionStore().user == null || useUserSessionStore().user.role !== "ADMIN" && useUserSessionStore().user.role !== "EMPLOYEE") {
             this.$router.push("/");
         }
