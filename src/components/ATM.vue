@@ -50,7 +50,8 @@ export default {
       user: null,
       amount: 0,
       currency: "",
-      currencySymbol: "\u20AC"
+      currencySymbol: "\u20AC",
+      error: ""
     };
   },
   mounted() {
@@ -70,6 +71,7 @@ export default {
   },
   methods: {
     processTransaction(transactionType) {
+      this.error = "";
       const transactionData = {
         IBAN: this.user.current_account.IBAN,
         amount: this.amount,
