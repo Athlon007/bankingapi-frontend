@@ -1,11 +1,11 @@
 <template>
-    <section>
-        <div class="container col-12 mx-auto">
+    <section class="d-flex flex-column flex-grow-1 justify-content-center">
+        <div class="container p-2 card">
             <h1 class="mx-auto text-center">Login</h1>
             <div class="alert alert-danger" v-if="this.error">
                 {{ this.error }}
             </div>
-            <form class="mx-auto w-100 p-2">
+            <form class="container">
                 <div class="form-group mx-auto col-6 col-mx-12">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" class="d-input w-100" v-model="this.username"

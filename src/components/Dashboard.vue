@@ -3,7 +3,7 @@ import LimitsCard from "./users/LimitsCard.vue";
 </script>
 
 <template>
-  <section>
+  <section class="d-flex flex-column flex-grow-1">
     <div class="container">
       <div class="row">
         <h2 class="mt-3 mt-lg-5">Welcome, {{ user?.firstname }}</h2>

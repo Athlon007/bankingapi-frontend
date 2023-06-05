@@ -1,62 +1,78 @@
 <template>
-  <section>
+  <section class="d-flex flex-column flex-grow-1">
     <div class="container">
-      <h2 class="mt-3 mt-lg-5">Transaction History</h2>
+      <h2 class="pt-3">Transaction History</h2>
     </div>
-    <div class="container">
-      <h5>Filter by</h5>
-      <div>
-        <select>
-          <option @click="activateFilterByTransactionID">Transaction ID</option>
-          <option @click="activateFilterByIBANs">IBANs</option>
-          <option @click="activateFilterByUserIDs">User IDs</option>
-        </select>
-      </div>
-      <div>
-        <select>
+    <div class="container border border-1 p-3 card">
+      <div class="pb-3 row">
+        <span class="fw-bolder col-lg-2">Transaction type: </span>
+        <select class="col" style="max-width: 10em;">
           <option @click="transactionType = null">All</option>
           <option @click="transactionType = 'TRANSACTION'">Transaction</option>
           <option @click="transactionType = 'DEPOSIT'">Deposit</option>
           <option @click="transactionType = 'WITHDRAWAL'">Withdrawal</option>
         </select>
       </div>
+      <div class="pb-3 row">
+        <span class="fw-bolder col-lg-2">Filter by: </span>
+        <select class="col" style="max-width: 10em;">
+          <option @click="activateFilterByTransactionID">Transaction ID</option>
+          <option @click="activateFilterByIBANs">IBANs</option>
+          <option @click="activateFilterByUserIDs">User IDs</option>
+        </select>
+      </div>
       <form @submit.prevent="getFilteredTransactions">
-        <div>
-          <div v-if="filterByTransactionID">
-            <label for="transactionID">Transaction ID</label>
-            <input id="transactionID" type="number" min="0"
-                   v-model="transactionID">
+        <div class="pb-3">
+          <div v-if="filterByTransactionID" class="row">
+            <div class="col">
+              <label for="transactionID" class="fw-bolder">Transaction ID</label>
+              <input id="transactionID" type="number" min="0" class="m-2 mx-0 w-100"
+                     v-model="transactionID">
+            </div>
+            <div class="col"></div>
           </div>
-          <div v-if="filterByIBANs">
-            <label for="senderIBAN">Sender IBAN</label>
-            <input id="senderIBAN" type="text" pattern="^[A-Za-z]{2}[0-9]{2}[A-Za-z]{4}[0-9]{10}$"
-                   v-model="ibanSender">
-            <label for="receiverIBAN">Receiver IBAN</label>
-            <input id="receiverIBAN" type="text" pattern="^[A-Za-z]{2}[0-9]{2}[A-Za-z]{4}[0-9]{10}$"
-                   v-model="ibanReceiver">
+          <div v-if="filterByIBANs" class="row">
+            <div class="col">
+              <label for="senderIBAN" class="fw-bolder">Sender IBAN</label>
+              <input id="senderIBAN" type="text" pattern="^[A-Za-z]{2}[0-9]{2}[A-Za-z]{4}[0-9]{10}$" class="m-2 mx-0 w-100"
+                     v-model="ibanSender">
+            </div>
+            <div class="col">
+              <label for="receiverIBAN" class="fw-bolder">Receiver IBAN</label>
+              <input id="receiverIBAN" type="text" pattern="^[A-Za-z]{2}[0-9]{2}[A-Za-z]{4}[0-9]{10}$" class="m-2 mx-0 w-100"
+                     v-model="ibanReceiver">
+            </div>
           </div>
-          <div v-if="filterByUserIDs">
-            <label for="senderID">Sender ID</label>
-            <input id="senderID" type="number" min="0" v-model="userSenderID">
-            <label for="receiverID">Receiver ID</label>
-            <input id="receiverID" type="number" min="0" v-model="userReceiverID">
+          <div v-if="filterByUserIDs" class="row">
+            <div class="col">
+              <label for="senderID" class="fw-bolder">Sender ID</label>
+              <input id="senderID" type="number" min="0" v-model="userSenderID" class="m-2 mx-0 w-100">
+            </div>
+            <div class="col">
+              <label for="receiverID" class="fw-bolder">Receiver ID</label>
+              <input id="receiverID" type="number" min="0" v-model="userReceiverID" class="m-2 mx-0 w-100">
+            </div>
           </div>
         </div>
         <div class="row">
-          <label for="minAmount">Minimum Amount</label>
-          <input id="minAmount" type="number" step="0.01" min="0" placeholder="0.00" v-model="minAmount">
+          <div class="col">
+            <label for="minAmount" class="fw-bolder">Minimum Amount</label>
+            <input id="minAmount" type="number" step="0.01" min="0" placeholder="0.00" v-model="minAmount" class="m-2 mx-0 w-100">
+          </div>
+          <div class="col">
+            <label for="minAmount" class="fw-bolder">Maximum Amount</label>
+            <input id="minAmount" type="number" step="0.01" min="0" placeholder="0.00" v-model="maxAmount" class="m-2 mx-0 w-100">
+          </div>
         </div>
         <div class="row">
-          <label for="minAmount">Maximum Amount</label>
-          <input id="minAmount" type="number" step="0.01" min="0" placeholder="0.00" v-model="maxAmount">
-        </div>
-        <div class="row">
-          <label for="startDate">Start Date</label>
-          <input id="startDate" type="datetime-local" v-model="startDate">
-        </div>
-        <div class="row">
-          <label for="endDate">End Date</label>
-          <input id="endDate" type="datetime-local" v-model="endDate">
+          <div class="col">
+            <label for="startDate" class="fw-bolder">Start Date</label>
+            <input id="startDate" type="datetime-local" v-model="startDate" class="m-2">
+          </div>
+          <div class="col">
+            <label for="endDate" class="fw-bolder">End Date</label>
+            <input id="endDate" type="datetime-local" v-model="endDate" class="m-2">
+          </div>
         </div>
         <button class="btn btn-primary" type="submit">Filter</button>
       </form>
@@ -64,7 +80,7 @@
         {{errorMessage}}
       </div>
     </div>
-    <div class="container">
+    <div class="container card mt-4">
       <div class="table-responsive">
         <table class="table table-hover">
           <thead class="thead-light">
@@ -87,7 +103,7 @@
             <td>{{ transaction.receiver_iban }}</td>
             <td>{{ transaction.sender_iban }}</td>
             <td>{{ transaction.amount }}</td>
-            <td>{{ transaction.timestamp }}</td>
+            <td>{{ formatDate(transaction.timestamp) }}</td>
             <td>{{ transaction.description }}</td>
           </tr>
           </tbody>
@@ -100,6 +116,7 @@
 <script>
 import { useUserSessionStore } from "../../stores/usersession.js";
 import axios from "@/axios_auth";
+import moment from "moment";
 
 export default {
   name: "TransferHistoryList",
@@ -216,9 +233,19 @@ export default {
         this.errorOccurred = true;
         this.errorMessage = error.response.data.error_message;
       });
-    }
+    },
+    formatDate(date) {
+      return moment(date).format('DD/MM/YYYY hh:mm:ss');
+    },
   }
 };
 </script>
 
-<style></style>
+<style>
+tbody>tr {
+  background-color: #ffffff;
+}
+section {
+  background-color: #F9F8FB;
+}
+</style>
