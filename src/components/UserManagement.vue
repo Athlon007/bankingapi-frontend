@@ -187,11 +187,6 @@
                                     @keyup.enter="register" min="0" />
                             </div>
                             <div class="form-group">
-                                <label for="absolute_limit">Absolute Limit</label>
-                                <input type="number" id="absolute_limit" name="absolute_limit" class="d-input w-100"
-                                    v-model="this.edited_user_limits.absolute_limit" @keyup.enter="register" max="0" />
-                            </div>
-                            <div class="form-group">
                                 <label for="remaining_daily_limit">Remaining Daily Limit</label>
                                 <input type="number" id="remaining_daily_limit" name="remaining_daily_limit"
                                     class="d-input w-100"
