@@ -5,7 +5,7 @@
       <div class="alert alert-danger" v-if="this.error">
         {{ this.error }}
       </div>
-      <form>
+      <div>
         <div class="row">
           <div class="col-6 form-group">
             <label for="username">Username</label>
@@ -85,6 +85,7 @@
             </div>
             <button type="button" class="btn btn-primary" v-on:click="register">Register</button>
         </form>
+      </div>
     </div>
   </section>
 </template>
