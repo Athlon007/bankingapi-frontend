@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://bankapi-inholland-project.onrender.com/'
+    //baseURL: 'https://bankapi-inholland-project.onrender.com/'
+    baseURL: 'http://localhost:8443/'
 });
 
 instance.defaults.headers.post['Content-Type'] = 'application/json';

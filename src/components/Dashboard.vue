@@ -59,6 +59,7 @@ import LimitsCard from "./users/LimitsCard.vue";
 <script>
 import { useUserSessionStore } from "../stores/usersession.js";
 import useEmitter from '../emitter.js';
+import axios from "../axios_auth";
 
 export default {
   name: "Home",
@@ -72,18 +73,33 @@ export default {
       currencySymbol: "\u20AC"
     };
   },
+  methods: {
+    loadUser() {
+      console.log(useUserSessionStore().user_id);
+      axios.get(`/users/${useUserSessionStore().user_id}`)
+        .then(response => {
+          this.user = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  },
   mounted() {
     if (!useUserSessionStore().isAuthenticated) {
       this.$router.push("/login");
+      return;
     }
 
+    this.loadUser();
+
     useUserSessionStore().getUser().then(user => {
-      this.user = user;
+      this.loadUser();
     });
 
     useEmitter().on("login", user_id => {
       useUserSessionStore().getUser().then(user => {
-        this.user = user;
+        this.loadUser();
       });
     });
   },
