@@ -49,12 +49,13 @@ export default {
             this.isLoggingIn = true;
             this.store.login(this.username, this.password)
                 .then(() => {
-                    this.isLoggingIn = false;
                     this.$router.push('/dashboard');
                 })
                 .catch((error) => {
-                    this.isLoggingIn = false;
                     this.error = error;
+                })
+                .finally(() => {
+                    this.isLoggingIn = false;
                 });
         }
     },

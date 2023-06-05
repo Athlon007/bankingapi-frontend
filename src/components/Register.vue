@@ -4,7 +4,7 @@
         <div class="alert alert-danger" v-if="this.error">
             {{ this.error }}
         </div>
-        <form>
+        <form :class="this.isRegistering ? 'disabled' : ''">
             <div class="row">
                 <div class="col-6 form-group">
                     <label for="username">Username</label>
@@ -95,7 +95,8 @@ export default {
             },
             error: "",
             password_confirm: "",
-            is_current_user_admin: false
+            is_current_user_admin: false,
+            isRegistering: false
         };
     },
     methods: {
@@ -111,6 +112,12 @@ export default {
             }
         },
         register() {
+            if (this.isRegistering) {
+                return;
+            }
+
+            this.isRegistering = true;
+
             if (this.userRequest.password !== this.password_confirm) {
                 this.error = "Passwords do not match.";
                 return;
@@ -140,7 +147,10 @@ export default {
                     // If response is not OK, print error in console.
                     console.log(error);
                     this.error = error.response.data.error_message;
-                });
+                })
+                .finally(() => {
+                    this.isRegistering = false;
+                })
         }
     },
     mounted() {
@@ -156,4 +166,9 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}
+</style>
