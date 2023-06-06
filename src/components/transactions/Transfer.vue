@@ -1,9 +1,9 @@
 <template>
-  <section>
+  <section class="d-flex flex-column flex-grow-1">
     <div class="container">
-      <h2 class="mt-3 mt-lg-5">Transfer money</h2>
+      <h2 class="pt-3">Transfer money</h2>
     </div>
-    <div class="container">
+    <div class="container card my-3 p-3">
       <div v-if="userPerforming?.role === 'EMPLOYEE' || userPerforming?.role === 'ADMIN'" class="border-1 border p-3 mb-4">
         <h5>Perform authorized transaction</h5>
         <select id="userSelection" class="form-control mb-2" @change="updateSelectedUser">
@@ -18,7 +18,7 @@
       </div>
       <form v-if="user?.current_account != null || user?.saving_account != null" @submit.prevent="processTransfer">
         <div class="mb-3">
-          <label for="from_account" class="form-label h5">Select an account</label>
+          <label for="from_account" class="form-label h5 fw-bolder">Select an account</label>
           <select id="from_account" class="form-select" @change="accountSelectChange($event)">
             <option value="1">Current account ({{user?.current_account.IBAN}})</option>
             <option value="2" v-if="user?.saving_account != null">Saving account ({{user?.saving_account.IBAN}})</option>
@@ -37,6 +37,10 @@
             <div class="row">
               <span class="col-2 fw-bolder">Balance:</span>
               <span class="col-10">€ {{ selectedAccount?.balance.toFixed(2) }}</span>
+            </div>
+            <div class="row">
+              <span class="col-2 fw-bolder">Abs. Limit:</span>
+              <span class="col-10">€ {{ selectedAccount?.absolute_limit.toFixed(2) }}</span>
             </div>
           </div>
         </div>
@@ -194,4 +198,21 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+section {
+  padding-bottom: 3em;
+}
+
+.frame {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .frame {
+    border-radius: 0px;
+  }
+}
+</style>

@@ -3,7 +3,7 @@ import LimitsCard from "./users/LimitsCard.vue";
 </script>
 
 <template>
-  <section>
+  <section class="d-flex flex-column flex-grow-1">
     <div class="container">
       <div class="row">
         <h2 class="mt-3 mt-lg-5">Welcome, {{ user?.firstname }}</h2>
@@ -30,7 +30,7 @@ import LimitsCard from "./users/LimitsCard.vue";
               <p>{{ user?.current_account.IBAN }}</p>
               <h4 class="fw-bold">{{ user?.current_account.balance }} {{ currencySymbol }}</h4>
               <p class="color-warning" v-if="user?.current_account.isActive == false">This account has been deactivated.
-                Contanct customer
+                Contact customer
                 support.</p>
             </div>
           </div>
@@ -40,7 +40,7 @@ import LimitsCard from "./users/LimitsCard.vue";
               <p>{{ user?.saving_account.IBAN }}</p>
               <h4 class="fw-bold">{{ user?.saving_account.balance }} {{ currencySymbol }}</h4>
               <p class="color-warning" v-if="user?.saving_account.isActive == false">This account has been deactivated.
-                Contanct customer
+                Contact customer
                 support.</p>
             </div>
           </div>
@@ -59,6 +59,7 @@ import LimitsCard from "./users/LimitsCard.vue";
 <script>
 import { useUserSessionStore } from "../stores/usersession.js";
 import useEmitter from '../emitter.js';
+import axios from "../axios_auth";
 
 export default {
   name: "Home",
@@ -72,18 +73,32 @@ export default {
       currencySymbol: "\u20AC"
     };
   },
+  methods: {
+    loadUser() {
+      axios.get(`/users/${useUserSessionStore().user_id}`)
+        .then(response => {
+          this.user = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  },
   mounted() {
     if (!useUserSessionStore().isAuthenticated) {
       this.$router.push("/login");
+      return;
     }
 
+    this.loadUser();
+
     useUserSessionStore().getUser().then(user => {
-      this.user = user;
+      this.loadUser();
     });
 
     useEmitter().on("login", user_id => {
       useUserSessionStore().getUser().then(user => {
-        this.user = user;
+        this.loadUser();
       });
     });
   },

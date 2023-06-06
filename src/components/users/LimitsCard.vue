@@ -15,10 +15,6 @@
         </div>
         <div class="row">
             <div class="row col-6">
-                <h3>Absolute Limit:</h3>
-                <h4 class="fw-bold">{{ limits.absolute_limit }} {{ currencySymbol }}</h4>
-            </div>
-            <div class="row col-6">
                 <h3>Remaining Daily Transaction Limit:</h3>
                 <h4 class="fw-bold">{{ limits.remaining_daily_transaction_limit }} {{ currencySymbol }}</h4>
             </div>
@@ -37,7 +33,6 @@ export default {
             limits: {
                 transaction_limit: 0,
                 daily_transaction_limit: 0,
-                absolute_limit: 0,
                 remaining_daily_transaction_limit: 0
             },
             // EUR

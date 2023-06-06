@@ -1,10 +1,24 @@
 <template>
-    <div class="container">
-        <h1>Register</h1>
-        <div class="alert alert-danger" v-if="this.error">
-            {{ this.error }}
+  <section class="d-flex flex-column flex-grow-1 justify-content-center">
+    <div class="container card p-3">
+      <h1>Register</h1>
+      <div class="alert alert-danger" v-if="this.error">
+        {{ this.error }}
+      </div>
+      <div>
+        <div class="row">
+          <div class="col-6 form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="d-input w-100"
+                   v-model="this.userRequest.username" @keyup.enter="register" />
+          </div>
+          <div class="col-6 form-group">
+            <label for="email">E-Mail</label>
+            <input type="email" id="email" name="email" class="d-input w-100" v-model="this.userRequest.email"
+                   @keyup.enter="register" />
+          </div>
         </div>
-        <form>
+        <form :class="this.isRegistering ? 'disabled' : ''">
             <div class="row">
                 <div class="col-6 form-group">
                     <label for="username">Username</label>
@@ -71,7 +85,9 @@
             </div>
             <button type="button" class="btn btn-primary" v-on:click="register">Register</button>
         </form>
+      </div>
     </div>
+  </section>
 </template>
 
 <script>
@@ -95,7 +111,8 @@ export default {
             },
             error: "",
             password_confirm: "",
-            is_current_user_admin: false
+            is_current_user_admin: false,
+            isRegistering: false
         };
     },
     methods: {
@@ -111,6 +128,12 @@ export default {
             }
         },
         register() {
+            if (this.isRegistering) {
+                return;
+            }
+
+            this.isRegistering = true;
+
             if (this.userRequest.password !== this.password_confirm) {
                 this.error = "Passwords do not match.";
                 return;
@@ -140,7 +163,10 @@ export default {
                     // If response is not OK, print error in console.
                     console.log(error);
                     this.error = error.response.data.error_message;
-                });
+                })
+                .finally(() => {
+                    this.isRegistering = false;
+                })
         }
     },
     mounted() {
@@ -156,4 +182,9 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}
+</style>

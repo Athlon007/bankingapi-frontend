@@ -1,12 +1,12 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+  <nav class="navbar navbar-expand-md navbar-dark nav-background">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav"
         aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div id="nav" class="collapse navbar-collapse">
-        <router-link to="/" class="navbar-brand">InHolland Bank</router-link>
+        <router-link to="/" class="navbar-brand fw-bolder">InHolland Bank</router-link>
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
             <router-link to="/dashboard" class="nav-link" active-class="active"
@@ -100,7 +100,12 @@ export default {
 </script>
 
 <style>
+.nav-background {
+  background-color: #2C3782;
+}
+
 .nav-link:hover {
   cursor: pointer;
 }
+
 </style>

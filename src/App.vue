@@ -16,8 +16,8 @@ export default {
 <template>
   <navigation />
   <RouterView />
-  <div class="container">
-    <footer class="py-3 my-4">
+  <div class="w-100">
+    <footer class="p-4">
       <p class="text-center text-body-secondary">© 2023 IT2A Group 2</p>
       <p class="text-center text-body-secondary">This website is not actually InHolland's website, instead it is an
         university project.</p>
@@ -28,6 +28,22 @@ export default {
 </template>
 
 <style>
+body {
+  min-height: 100vh;
+  #background-color: #EAEBF3;
+}
+
+footer {
+  color: white;
+  background-color: #2C3782;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 dialog {
   border-width: 0px;
   border-radius: calc(5px * 3.14);
