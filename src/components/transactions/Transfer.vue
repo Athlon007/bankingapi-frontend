@@ -6,9 +6,9 @@
     <div class="container card my-3 p-3">
       <div v-if="userPerforming?.role === 'EMPLOYEE' || userPerforming?.role === 'ADMIN'" class="border-1 border p-3 mb-4">
         <h5>Perform authorized transaction</h5>
-        <select id="userSelection" class="form-control mb-2" @change="updateSelectedUser">
-          <option @click="setSelfTransfer">For myself</option>
-          <option @click="setSomeoneElseTransfer" >For a user</option>
+        <select id="userSelection" class="form-control mb-2" @change="targetSelectChange">
+          <option value="forMyself">For myself</option>
+          <option value="forUser">For a user</option>
         </select>
         <form v-if="forSomeoneElse" @submit.prevent="retrieveUserInformation">
           <label for="userID" class="form-label h5">User ID</label>
@@ -19,7 +19,7 @@
       <form v-if="user?.current_account != null || user?.saving_account != null" @submit.prevent="processTransfer">
         <div class="mb-3">
           <label for="from_account" class="form-label h5 fw-bolder">Select an account</label>
-          <select id="from_account" class="form-select" @change="accountSelectChange($event)">
+          <select id="from_account" class="form-select" @change="accountSelectChange">
             <option value="1">Current account ({{user?.current_account.IBAN}})</option>
             <option value="2" v-if="user?.saving_account != null">Saving account ({{user?.saving_account.IBAN}})</option>
           </select>
@@ -113,9 +113,6 @@ export default {
   },
   methods: {
     setSelfTransfer() {
-      this.errorOccurred = false;
-      this.successfulTransfer = false;
-
       this.forSomeoneElse = false;
       this.user = this.userPerforming;
       this.userId = this.user.id;
@@ -129,17 +126,24 @@ export default {
       }
     },
     setSomeoneElseTransfer() {
-      this.errorOccurred = false;
-      this.successfulTransfer = false;
-
       this.forSomeoneElse = true;
       this.user = null;
       this.userId = 0;
     },
-    accountSelectChange(value) {
-      if (value === 1) {
+    targetSelectChange(event) {
+      this.errorOccurred = false;
+      this.successfulTransfer = false;
+
+      if (event.target.value == "forMyself") {
+        this.setSelfTransfer();
+      } else if (event.target.value == "forUser") {
+        this.setSomeoneElseTransfer();
+      }
+    },
+    accountSelectChange(event) {
+      if (event.target.value == 1) {
         this.selectedAccount = this.user?.current_account;
-      } else if (value === 2) {
+      } else if (event.target.value == 2) {
         this.selectedAccount = this.user?.saving_account;
       }
     },
