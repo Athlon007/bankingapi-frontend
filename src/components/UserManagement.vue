@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <!-- Tabs Panel -->
-                <div class="col-6" :class="edited_user == null ? 'disabled' : ''">
+                <div class="col-6" :class="edited_user.id == null ? 'disabled' : ''">
                     <!-- Tabs -->
                     <nav>
                         <div class="nav nav-tabs" role="tablist" id="nav-tabs">
@@ -582,6 +582,7 @@ export default {
 .disabled {
     pointer-events: none;
     cursor: default;
+    opacity: 0.5;
 }
 
 .container {
