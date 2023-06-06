@@ -43,6 +43,11 @@
                         </ul>
                         <UserManagementListItem v-for="user in users" :key="user.id" :user="user" />
                     </div>
+                    <div class="d-flex">
+                        <button class="btn btn-primary" @click="this.previousPage()">Previous</button>
+                        <button class="btn btn-primary mx-2" @click="this.nextPage()">Next</button>
+                        <p>Page: {{ this.page + 1 }}</p>
+                    </div>
                 </div>
                 <!-- Tabs Panel -->
                 <div class="col-6" :class="edited_user.id == null ? 'disabled' : ''">
@@ -344,9 +349,18 @@ export default {
                     this.error = error.response.data.error_message;
                 });
         },
+        previousPage() {
+            this.page--;
+            this.lastQuery.page = this.page;
+            if (this.page < 0) {
+                this.page = 0;
+            }
+            this.doQuery(this.lastQuery);
+        },
         nextPage() {
-            this.page += this.limit;
-            this.search(this.lastQuery);
+            this.page++;
+            this.lastQuery.page = this.page;
+            this.doQuery(this.lastQuery);
         },
         searchOnSearchbar(event) {
             event.preventDefault();
