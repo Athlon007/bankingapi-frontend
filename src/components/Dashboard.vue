@@ -75,7 +75,6 @@ export default {
   },
   methods: {
     loadUser() {
-      console.log(useUserSessionStore().user_id);
       axios.get(`/users/${useUserSessionStore().user_id}`)
         .then(response => {
           this.user = response.data;

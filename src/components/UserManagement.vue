@@ -531,6 +531,7 @@ export default {
         }
 
         await this.search();
+        await useUserSessionStore().getUser();
         this.isCurrentUserAdmin = useUserSessionStore().user.role === "ADMIN";
 
         useEmitter().on("activate-user", (user) => {
