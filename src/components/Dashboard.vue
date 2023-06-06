@@ -30,7 +30,7 @@ import LimitsCard from "./users/LimitsCard.vue";
               <p>{{ user?.current_account.IBAN }}</p>
               <h4 class="fw-bold">{{ user?.current_account.balance }} {{ currencySymbol }}</h4>
               <p class="color-warning" v-if="user?.current_account.isActive == false">This account has been deactivated.
-                Contanct customer
+                Contact customer
                 support.</p>
             </div>
           </div>
@@ -40,7 +40,7 @@ import LimitsCard from "./users/LimitsCard.vue";
               <p>{{ user?.saving_account.IBAN }}</p>
               <h4 class="fw-bold">{{ user?.saving_account.balance }} {{ currencySymbol }}</h4>
               <p class="color-warning" v-if="user?.saving_account.isActive == false">This account has been deactivated.
-                Contanct customer
+                Contact customer
                 support.</p>
             </div>
           </div>
@@ -75,7 +75,6 @@ export default {
   },
   methods: {
     loadUser() {
-      console.log(useUserSessionStore().user_id);
       axios.get(`/users/${useUserSessionStore().user_id}`)
         .then(response => {
           this.user = response.data;
