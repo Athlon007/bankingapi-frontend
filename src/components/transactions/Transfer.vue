@@ -38,6 +38,10 @@
               <span class="col-2 fw-bolder">Balance:</span>
               <span class="col-10">€ {{ selectedAccount?.balance.toFixed(2) }}</span>
             </div>
+            <div class="row">
+              <span class="col-2 fw-bolder">Abs. Limit:</span>
+              <span class="col-10">€ {{ selectedAccount?.absolute_limit.toFixed(2) }}</span>
+            </div>
           </div>
         </div>
         <div class="mb-3">

@@ -108,6 +108,13 @@
           </tr>
           </tbody>
         </table>
+        <!-- Pagination -->
+        <p v-if="transactions.length === 0">No results found.</p>
+        <div v-if="transactions.length > 0 || page > 0">
+          <p>Page: {{page}}</p>
+          <button class="btn btn-primary mb-3" v-if="page > 0" @click="pageBack"> &#60; </button>
+          <button class="btn btn-primary mx-2 mb-3" v-if="transactions.length === limit" @click="pageForward"> &#62; </button>
+        </div>
       </div>
     </div>
   </section>
@@ -131,7 +138,7 @@ export default {
       filterByUserIDs: false,
       transactionType: null,
       page: 0,
-      limit: 10,
+      limit: 5,
       minAmount: 0,
       maxAmount: 1000,
       startDate: null,
@@ -188,8 +195,8 @@ export default {
 
       axios.get('/transactions', {
         params: {
-          page: 0,
-          limit: 10,
+          page: this.page,
+          limit: this.limit,
           minAmount: this.minAmount,
           maxAmount: this.maxAmount,
           startDate: this.startDate,
@@ -212,8 +219,8 @@ export default {
 
       axios.get('/transactions', {
         params: {
-          page: 0,
-          limit: 10,
+          page: this.page,
+          limit: this.limit,
           minAmount: this.minAmount,
           maxAmount: this.maxAmount,
           startDate: this.startDate,
@@ -237,6 +244,14 @@ export default {
     formatDate(date) {
       return moment(date).format('DD/MM/YYYY hh:mm:ss');
     },
+    pageBack() {
+      this.page -= 1;
+      this.getFilteredTransactions();
+    },
+    pageForward() {
+      this.page += 1;
+      this.getFilteredTransactions()
+    }
   }
 };
 </script>
