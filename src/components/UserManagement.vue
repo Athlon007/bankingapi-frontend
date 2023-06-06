@@ -140,9 +140,11 @@
                                         </div>
                                         <div class="row" v-if="this.edited_user.current_account == null">
                                             <p>No Account</p>
-                                            <button type="button" class="btn btn-primary"
-                                                @click="createAccount('current')">Create
-                                                Account</button>
+                                            <div class="col-12">
+                                                <button type="button" class="btn btn-primary"
+                                                    @click="createAccount('current')">Create
+                                                    Account</button>
+                                            </div>
                                         </div>
                                         <div class="row" v-else>
                                             <p><strong>Account ID:</strong> {{ this.edited_user.current_account.id }}</p>
@@ -150,13 +152,24 @@
                                             <p><strong>Balance:</strong> {{ this.edited_user.current_account.balance }}</p>
                                             <p><strong>Active: </strong> {{ this.edited_user.current_account.isActive ?
                                                 "Yes" : "No" }}
+                                            <form class="my-2">
+                                                <label for="absolute-limit-current"><strong>Absolute Limit:</strong>
+                                                </label>
+                                                <input type="number" id="absolute-limit-current"
+                                                    name="absolute-limit-current" class="d-input w-100"
+                                                    v-model="this.edited_user.current_account.absolute_limit" max="0" />
+                                            </form>
                                             </p>
-                                            <div class="col-12">
-                                                <button type="button" class="btn btn-danger"
+                                            <div class="col-12 d-flex">
+                                                <button type="button" class="btn btn-primary mx-1"
+                                                    @click="updateAccountAbsoluteLimit('current', this.edited_user.current_account.absolute_limit)">Update
+                                                    Absolute
+                                                    Limit</button>
+                                                <button type="button" class="btn btn-danger mx-1"
                                                     @click="setAccountActive(false, 'current')"
                                                     v-if="this.edited_user.current_account.isActive">Deactivate
                                                     Account</button>
-                                                <button type="button" class="btn btn-success"
+                                                <button type="button" class="btn btn-success mx-1"
                                                     @click="setAccountActive(true, 'current')" v-else>Activate
                                                     Account</button>
                                             </div>
@@ -168,9 +181,11 @@
                                         </div>
                                         <div class="row" v-if="this.edited_user.saving_account == null">
                                             <p>No Account</p>
-                                            <button type="button" class="btn btn-primary"
-                                                @click="createAccount('saving')">Create
-                                                Account</button>
+                                            <div class="col-12">
+                                                <button type="button" class="btn btn-primary"
+                                                    @click="createAccount('saving')">Create
+                                                    Account</button>
+                                            </div>
                                         </div>
                                         <div class="row" v-else>
                                             <p><strong>Account ID:</strong> {{ this.edited_user.saving_account.id }}</p>
@@ -179,7 +194,18 @@
                                             <p><strong>Active: </strong> {{ this.edited_user.saving_account.isActive ? "Yes"
                                                 : "No" }}
                                             </p>
+                                            <form class="my-2">
+                                                <label for="absolute-limit-current"><strong>Absolute Limit:</strong>
+                                                </label>
+                                                <input type="number" id="absolute-limit-current"
+                                                    name="absolute-limit-current" class="d-input w-100"
+                                                    v-model="this.edited_user.saving_account.absolute_limit" max="0" />
+                                            </form>
                                             <div class="col-12">
+                                                <button type="button" class="btn btn-primary mx-1"
+                                                    @click="updateAccountAbsoluteLimit('saving', this.edited_user.saving_account.absolute_limit)">Update
+                                                    Absolute
+                                                    Limit</button>
                                                 <button type="button" class="btn btn-danger"
                                                     @click="setAccountActive(false, 'saving')"
                                                     v-if="this.edited_user.saving_account.isActive">Deactivate
@@ -301,14 +327,12 @@ export default {
             this.doQuery(params);
         },
         doQuery(params) {
-            console.log("doing query");
             this.lastQuery = params;
 
             axios.get(`/users`, {
                 params: params
             })
                 .then(response => {
-                    console.log("response: " + response.data);
                     this.users = response.data;
 
                     if (this.users.length < this.limit) {
@@ -472,6 +496,31 @@ export default {
         },
         addUser() {
             this.$router.push("/register");
+        },
+        updateAccountAbsoluteLimit(account_type, value) {
+            // PUT /accounts/user_id/account_id/limit
+
+            this.error = "";
+
+            const user_id = this.edited_user.id;
+            const account_id = account_type == 'current' ? this.edited_user.current_account.id : this.edited_user.saving_account.id;
+
+            axios.put('/accounts/' + user_id + '/' + account_id + '/limit', {
+                absoluteLimit: value
+            })
+                .then(response => {
+                    if (account_type == 'current') {
+                        this.edited_user.current_account = response.data;
+                        this.users.find(user => user.id === this.edited_user.id).current_account = response.data;
+                    }
+                    else {
+                        this.edited_user.saving_account = response.data;
+                        this.users.find(user => user.id === this.edited_user.id).saving_account = response.data;
+                    }
+                })
+                .catch(error => {
+                    this.error = error.response.data.error_message;
+                });
         }
     },
     async mounted() {
