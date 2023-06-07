@@ -1,4 +1,8 @@
 <template>
+  <Popup>
+    <h2>Successful</h2>
+    <p>Transaction successful</p>
+  </Popup>
   <section class="d-flex flex-column flex-grow-1">
     <div class="container">
       <div class="row">
@@ -41,8 +45,12 @@
 <script>
 import axios from '../axios_auth';
 import { useUserSessionStore } from "../stores/usersession.js";
+import Popup from "./Popup.vue";
 
 export default {
+  setup() {
+    return { Popup };
+  },
   name: "Account",
   data() {
     return {
@@ -62,7 +70,7 @@ export default {
       if (user.current_account == null) {
         this.$router.push("/accounts");
       }
-      else{
+      else {
         this.currency = user.current_account.currency_type;
       }
     });
