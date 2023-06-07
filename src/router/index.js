@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Home from '../components/Home.vue';
 import Dashboard from '../components/Dashboard.vue';
+import DashDesign from '../components/DashDesign.vue';
 import Transfer from '../components/transactions/Transfer.vue';
 import ATM from '../components/ATM.vue';
 import Login from '../components/Login.vue';
@@ -15,6 +16,7 @@ import TransactionHistory from '../components/transactions/TransactionHistory.vu
 const routes = [
   { path: '/', component: Home },
   { path: '/dashboard', component: Dashboard },
+  { path: '/dashdesign', component: DashDesign },
   { path: '/transfer', component: Transfer },
   { path: '/atm', component: ATM },
   { path: '/login', component: Login },
