@@ -14,17 +14,22 @@
             <div class="alert alert-danger">
               {{ this.error }}
             </div>
+            <!-- <div class="row" v-if="this.transaction_successfull">
+              <div class="alert alert-success">
+                {{ this.transaction_message }}
+              </div>
+            </div> -->
           </div>
           <div class="account-info mb-4">
-            <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{ currencySymbol
+            <p class="text-center"><strong>Account Balance:</strong> {{ account?.balance.toFixed(2) }} {{ currencySymbol
             }}
             </p>
-            <p class="text-center"><strong>IBAN:</strong> {{ user?.current_account.IBAN }}</p>
+            <p class="text-center"><strong>IBAN:</strong> {{ account?.IBAN }}</p>
           </div>
           <form @submit.prevent="processTransaction">
             <div class="form-group">
               <label for="amount">Amount</label>
-              <input type="number" id="amount" class="form-control" v-model="amount" required>
+              <input type="number" step="0.01" min="0" class="form-control h5" id="amount" v-model="amount" placeholder="0.00" required>
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary btn-lg withdraw-btn"
@@ -33,6 +38,14 @@
                 @click.prevent="processTransaction('deposit')">Deposit</button>
             </div>
           </form>
+          <div v-if="transaction_message" class="mt-4">
+            <div v-if="transaction_successfull" class="alert alert-success">
+              {{ transaction_message }}
+            </div>
+            <div v-else class="alert alert-danger">
+              {{ transaction_message }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -48,9 +61,13 @@ export default {
   data() {
     return {
       user: null,
-      amount: 0,
       currency: "",
-      currencySymbol: "\u20AC"
+      amount: "",
+      currencySymbol: "\u20AC",
+      error: "",
+      account: null,
+      transaction_message: "",
+      transaction_successfull: null
     };
   },
   mounted() {
@@ -63,36 +80,55 @@ export default {
       if (user.current_account == null) {
         this.$router.push("/accounts");
       }
-      else{
-        this.currency = user.current_account.currency_type;
+      else {
+        this.account = user.current_account;
       }
     });
   },
   methods: {
+    getUserInformation() {
+      axios
+        .get("/users/" + this.user?.id)
+        .then(response => {
+          this.user = response.data;
+          this.account = response.data.current_account;
+        })
+        .catch(error => {
+          this.error = error.response.data.error_message;
+        });
+    },
     processTransaction(transactionType) {
+      this.error = "";
+      this.transaction_message = "";
       const transactionData = {
-        IBAN: this.user.current_account.IBAN,
+        IBAN: this.account?.IBAN,
         amount: this.amount,
-        currencyType: this.currency
+        currencyType: this.account?.currency_type,
       };
 
       if (transactionType === "withdraw") {
         axios
           .post("transactions/withdraw", transactionData)
           .then(response => {
-            this.user.current_account.balance = response.data.balance;
+            this.getUserInformation();
+            this.transaction_message = response.data.description;
+            this.transaction_successfull = true;
           })
           .catch(error => {
             this.error = error.response.data.error_message;
+            this.transaction_successfull = false;
           })
       } else if (transactionType === "deposit") {
         axios
           .post("/transactions/deposit", transactionData)
           .then(response => {
-            this.user.current_account.balance = response.data.balance;
+            this.getUserInformation();
+            this.transaction_message = response.data.description;
+            this.transaction_successfull = true;
           })
           .catch(error => {
             this.error = error.response.data.error_message;
+            this.transaction_successfull = false;
           });
       }
     },
