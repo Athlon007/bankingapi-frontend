@@ -56,6 +56,6 @@ ul:hover>li {
 }
 
 .edited>li {
-    background-color: #f0d2e6 !important;
+    background-color: #2c378233 !important;
 }
 </style>

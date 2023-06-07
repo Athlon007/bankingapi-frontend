@@ -6,19 +6,19 @@
     <div class="container border border-1 p-3 card">
       <div class="pb-3 row">
         <span class="fw-bolder col-lg-2">Transaction type: </span>
-        <select class="col" style="max-width: 10em;">
-          <option @click="transactionType = null">All</option>
-          <option @click="transactionType = 'TRANSACTION'">Transaction</option>
-          <option @click="transactionType = 'DEPOSIT'">Deposit</option>
-          <option @click="transactionType = 'WITHDRAWAL'">Withdrawal</option>
+        <select class="col" style="max-width: 10em;" @change="changeTransactionType">
+          <option value="ALL">All</option>
+          <option value="TRANSACTION">Transaction</option>
+          <option value="DEPOSIT">Deposit</option>
+          <option value="WITHDRAWAL">Withdrawal</option>
         </select>
       </div>
       <div class="pb-3 row">
         <span class="fw-bolder col-lg-2">Filter by: </span>
-        <select class="col" style="max-width: 10em;">
-          <option @click="activateFilterByTransactionID">Transaction ID</option>
-          <option @click="activateFilterByIBANs">IBANs</option>
-          <option @click="activateFilterByUserIDs">User IDs</option>
+        <select class="col" style="max-width: 10em;" @change="changeFilterType">
+          <option value="TransactionID">Transaction ID</option>
+          <option value="IBAN">IBANs</option>
+          <option value="UserID">User IDs</option>
         </select>
       </div>
       <form @submit.prevent="getFilteredTransactions">
@@ -251,6 +251,22 @@ export default {
     pageForward() {
       this.page += 1;
       this.getFilteredTransactions()
+    },
+    changeTransactionType(event) {
+      if (event.target.value === "ALL") {
+        this.transactionType = null;
+      } else {
+        this.transactionType = event.target.value;
+      }
+    },
+    changeFilterType(event) {
+      if (event.target.value == "TransactionID") {
+        this.activateFilterByTransactionID();
+      } else if (event.target.value == "IBAN") {
+        this.activateFilterByIBANs();
+      } else if (event.target.value == "UserID") {
+        this.activateFilterByUserIDs();
+      }
     }
   }
 };
