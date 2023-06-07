@@ -1,14 +1,14 @@
 <template>
-  <Popup>
-    <h2>Successful</h2>
-    <p>Transaction successful</p>
-  </Popup>
+
   <section class="d-flex flex-column flex-grow-1">
     <div class="container">
       <div class="row">
         <h2 class="mt-3 mt-lg-5 text-center">INHOLLAND BANK ATM</h2>
       </div>
-
+  <Popup>
+    <h2>Successful</h2>
+    <p>Transaction successful</p>
+  </Popup>
     </div>
     <div class="row my-4">
       <div class="col-md-6 offset-md-3">
