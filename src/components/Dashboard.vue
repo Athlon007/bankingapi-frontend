@@ -12,7 +12,7 @@ import LimitsCard from "./users/LimitsCard.vue";
         <div class="card" v-if="user?.role === 'USER'">
           <p>Sorry, you must wait for an employee to open your account.</p>
         </div>
-        <div class="card" v-else="user?.role === 'EMPLOYEE'">
+        <div class="card px-2 py-1" v-else="user?.role === 'EMPLOYEE'">
           <p>Go into Account management to create an account.</p>
         </div>
       </div>
