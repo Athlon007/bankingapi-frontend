@@ -1,37 +1,41 @@
 <template>
-    <div class="popup">
-        <div class="popup-inner">
-            <slot />
-            <button class="popup-close">
-                Close popup
-            </button>
+    <div class="root">
+        <button class="btn btn-primary" @click="isOPen = true">Show Popup</button>
+        <div class="modal" v-if="isOpen">
+            <div>
+                <h2>Popup</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>
+                <button @click="isOpen = false">Close</button>
+            </div>
         </div>
     </div>
 </template>
 <script>
+import {ref} from 'vue'
+
+const isOpen = ref(false)
 </script>
 <style scoped>
-.popup{
-    position:fixed;
-    top:0;
-    left:0;
+.root{
+    position: relative;
+}
+.popup {
+    position: absolute;
+    top: 0;
+    left: 0;
     right: 0;
-    bottom:0;
+    bottom: 0;
     z-index: 0;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0, 0, 0, 0.2);
 
     display: flex;
     align-items: center;
     justify-content: center;
 }
-    .popup-inner{
-        position: relative;
-        padding: 32px;
-        width: 100%;
-        max-width: 500px;
-        background-color: #fff;
-        border-radius: 4px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    }
 
+.popup > div {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
 </style>

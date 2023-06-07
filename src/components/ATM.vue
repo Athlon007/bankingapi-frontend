@@ -1,14 +1,9 @@
 <template>
-
   <section class="d-flex flex-column flex-grow-1">
     <div class="container">
       <div class="row">
         <h2 class="mt-3 mt-lg-5 text-center">INHOLLAND BANK ATM</h2>
       </div>
-  <Popup>
-    <h2>Successful</h2>
-    <p>Transaction successful</p>
-  </Popup>
     </div>
     <div class="row my-4">
       <div class="col-md-6 offset-md-3">
@@ -30,11 +25,31 @@
               <label for="amount">Amount</label>
               <input type="number" id="amount" class="form-control" v-model="amount" required>
             </div>
+
             <div class="text-center">
               <button type="submit" class="btn btn-primary btn-lg withdraw-btn"
-                @click.prevent="processTransaction('withdraw')">Withdraw</button>
+                @click.prevent="processTransaction('withdraw')" @click="isOPen = true">Withdraw</button>
+              <teleport to="body">
+                <div class="popup" v-if="isOpen">
+                  <div>
+                    <h2>Successfull withdraw</h2>
+                    <p>Your withdraw has been Successfull</p>
+                    <button @click="isOpen = false">Close</button>
+                  </div>
+                </div>
+              </teleport>
+
               <button type="submit" class="btn btn-primary btn-lg deposit-btn"
                 @click.prevent="processTransaction('deposit')">Deposit</button>
+              <teleport to="body">
+                <div class="popup" v-if="popupwithdraw">
+                  <div>
+                    <h2>Successfull deposit</h2>
+                    <p>Your Deposit has been Successfull</p>
+                    <button @click="popupwithdraw = false">Close</button>
+                  </div>
+                </div>
+              </teleport>
             </div>
           </form>
         </div>
@@ -45,12 +60,10 @@
 <script>
 import axios from '../axios_auth';
 import { useUserSessionStore } from "../stores/usersession.js";
-import Popup from "./Popup.vue";
+import { ref } from 'vue'
 
+const popupwithdraw = ref(false)
 export default {
-  setup() {
-    return { Popup };
-  },
   name: "Account",
   data() {
     return {
@@ -107,6 +120,30 @@ export default {
 };
 </script>
 <style>
+.root {
+  position: relative;
+}
+
+.popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup>div {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
 .atm-card {
   background-color: #f2f2f2;
   border: 1px solid #ddd;
