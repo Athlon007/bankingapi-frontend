@@ -38,7 +38,6 @@
     </div>
   </section>
 </template>
-
 <script>
 import axios from '../axios_auth';
 import { useUserSessionStore } from "../stores/usersession.js";
