@@ -14,11 +14,11 @@
             <div class="alert alert-danger">
               {{ this.error }}
             </div>
-            <div class="row" v-if="this.transaction_successfull">
+            <!-- <div class="row" v-if="this.transaction_successfull">
               <div class="alert alert-success">
                 {{ this.transaction_message }}
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="account-info mb-4">
             <p class="text-center"><strong>Account Balance:</strong> {{ account?.balance.toFixed(2) }} {{ currencySymbol
