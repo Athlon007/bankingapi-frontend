@@ -1,13 +1,13 @@
 <template>
-  <section>
-    <div class="row">
+  <section class="d-flex flex-column flex-grow-1 p-0 overflow-hidden">
+    <div class="row pt-3">
       <img src="/logo.png" alt="logo" class="logo" />
-      <h2 class="tagline">Taking 2300 {{ this.currencySymbol }} from you per year!</h2>
+      <h2 class="tagline">Taking 2300 {{ this.currencySymbol }} from you every year!</h2>
     </div>
     <div class="row">
       <div class="container navs">
-        <RouterLink to="/register" class="btn btn-success btn-big">Register</RouterLink>
-        <RouterLink to="/login" class="btn btn-light btn-big">Login</RouterLink>
+        <RouterLink to="/register" class="btn btn-success">Register</RouterLink>
+        <RouterLink to="/login" class="btn btn-light">Login</RouterLink>
       </div>
     </div>
     <div class="carousel slide" data-bs-ride="carousel">

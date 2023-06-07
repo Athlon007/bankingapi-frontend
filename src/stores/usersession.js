@@ -143,7 +143,7 @@ export const useUserSessionStore = defineStore('usersession', {
                         resolve(response.data);
                     })
                     .catch((error) => {
-                        reject(error.response.data.errorMessage);
+                        reject(error.response.data.error_message);
                     });
             });
         },

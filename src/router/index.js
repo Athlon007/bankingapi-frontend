@@ -12,10 +12,6 @@ import AccountDeleted from '../components/AccountDeleted.vue';
 import TransactionHistory from '../components/transactions/TransactionHistory.vue';
 //import TransferHistoryList from '../components/TransactionHistory.vue';
 
-/*import ProductList from '../components/products/ProductList.vue';
-import CreateProduct from '../components/products/CreateProduct.vue';
-import EditProduct from '../components/products/EditProduct.vue';*/
-
 const routes = [
   { path: '/', component: Home },
   { path: '/dashboard', component: Dashboard },
