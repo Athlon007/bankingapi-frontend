@@ -28,25 +28,25 @@
 
             <div class="text-center">
               <button type="submit" class="btn btn-primary btn-lg withdraw-btn"
-                @click.prevent="processTransaction('withdraw')" @click="isOPen = true">Withdraw</button>
+                @click.prevent="processTransaction('withdraw')" @click="popupdeposit = true">Withdraw</button>
               <teleport to="body">
-                <div class="popup" v-if="isOpen">
+                <div class="popup" v-if="popupdeposit">
                   <div>
                     <h2>Successfull withdraw</h2>
                     <p>Your withdraw has been Successfull</p>
-                    <button @click="isOpen = false">Close</button>
+                    <button class="btn btn-primary btn-lg deposit-btn" @click="popupdeposit = false">Close</button>
                   </div>
                 </div>
               </teleport>
 
               <button type="submit" class="btn btn-primary btn-lg deposit-btn"
-                @click.prevent="processTransaction('deposit')">Deposit</button>
+                @click.prevent="processTransaction('deposit')" @click="popupwithdraw = true">Deposit</button>
               <teleport to="body">
                 <div class="popup" v-if="popupwithdraw">
                   <div>
                     <h2>Successfull deposit</h2>
                     <p>Your Deposit has been Successfull</p>
-                    <button @click="popupwithdraw = false">Close</button>
+                    <button class="btn btn-primary btn-lg deposit-btn" @click="popupwithdraw = false">Close</button>
                   </div>
                 </div>
               </teleport>
@@ -60,9 +60,10 @@
 <script>
 import axios from '../axios_auth';
 import { useUserSessionStore } from "../stores/usersession.js";
-import { ref } from 'vue'
+import { ref } from 'vue';
 
 const popupwithdraw = ref(false)
+const popupdeposit = ref(false)
 export default {
   name: "Account",
   data() {
