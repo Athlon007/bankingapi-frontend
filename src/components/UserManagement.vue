@@ -266,7 +266,7 @@
             <hr />
             <div class="row">
                 <p>Are you sure you want to <strong>{{ this.edited_user.current_account == null &&
-                    this.edited_user.saving_account == null ? "remove" : "deactivate" }}</strong> this account?</p>
+                    this.edited_user.saving_account == null ? "remove" : "deactivate" }}</strong> this user?</p>
                 <strong>
                     <p>{{ this.edited_user.firstname }} {{ this.edited_user.lastname }}</p>
                 </strong>
