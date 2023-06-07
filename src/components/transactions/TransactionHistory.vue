@@ -67,11 +67,11 @@
         <div class="row">
           <div class="col">
             <label for="startDate" class="fw-bolder">Start Date</label>
-            <input id="startDate" type="datetime-local" v-model="startDate" class="m-2">
+            <input id="startDate" type="date" v-model="startDate" class="m-2">
           </div>
           <div class="col">
             <label for="endDate" class="fw-bolder">End Date</label>
-            <input id="endDate" type="datetime-local" v-model="endDate" class="m-2">
+            <input id="endDate" type="date" v-model="endDate" class="m-2">
           </div>
         </div>
         <button class="btn btn-primary" type="submit">Filter</button>
@@ -150,12 +150,12 @@ export default {
       userReceiverID: null,
     };
   },
-  mounted() {
+  async mounted() {
     if (!useUserSessionStore().isAuthenticated) {
       this.$router.push("/login");
     }
 
-    useUserSessionStore().getUser().then(user => {
+    await useUserSessionStore().getUser().then(user => {
       this.user = user;
     });
 
@@ -223,8 +223,8 @@ export default {
           limit: this.limit,
           minAmount: this.minAmount,
           maxAmount: this.maxAmount,
-          startDate: this.startDate,
-          endDate: this.endDate,
+          startDate: this.startDate ? moment(this.startDate).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+          endDate: this.endDate ? moment(this.endDate).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
           transactionID: this.transactionID,
           ibanSender: this.ibanSender,
           ibanReceiver: this.ibanReceiver,
