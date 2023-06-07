@@ -7,8 +7,8 @@ export default {
   components: {
     Navigation
   },
-  mounted() {
-    useUserSessionStore().localLogin();
+  async mounted() {
+    await useUserSessionStore().localLogin();
   },
 };
 </script>
@@ -30,7 +30,7 @@ export default {
 <style>
 body {
   min-height: 100vh;
-  #background-color: #EAEBF3;
+  background-color: #EAEBF3;
 }
 
 footer {
