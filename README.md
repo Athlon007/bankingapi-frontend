@@ -1,15 +1,40 @@
-# vue-crud-starter
+# Bank Front-End
 
-This template is designed for an assignment to develop CRUD functionality on a Vue application with a REST API backend.
+## Description
 
-## Project Setup
+This is the front-end for the Bank API project. It is a simple web application that allows users to create accounts, deposit and withdraw money, and transfer money to other accounts.
 
-```sh
+## Links
+
+- [Front-end](https://kfigura.nl/bank)
+- [Swagger documentation](https://app.swaggerhub.com/apis/684006_1/BankingAPI/1.0.0)
+- [Back-End GitHub repository](https://github.com/Athlon007/bankapi)
+- Back-End server: https://bankapi-inholland-project.onrender.com
+
+## Authors
+
+- Konrad Figura (680886)
+- Rodrigo Bange (684006)
+- Vedat Türk (683343)
+- Roby Trierweiler (682474)
+
+## Requirements
+
+- npm
+
+## Building
+
+To build the project, run the following command:
+
+```bash
 npm install
+npm run build
 ```
 
-### Compile and Hot-Reload for Development
+## License
 
-```sh
-npm run dev
-```
+This project is licensed under the MIT license.
+
+## Info
+
+Created in 2023 for the InHolland University of Applied Sciences. This project is part of the Information Technology course.
