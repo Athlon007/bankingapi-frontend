@@ -138,7 +138,6 @@ export default {
           this.error = "";
           this.success = "Account updated successfully!";
           useUserSessionStore().user = response.data;
-          //this.$router.push("/dashboard");
           useEmitter().emit("login");
         })
         .catch(error => {
