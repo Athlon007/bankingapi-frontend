@@ -73,7 +73,6 @@ export default {
           this.user = response.data;
         })
         .catch(error => {
-          console.log(error);
         });
     },
     showDialog() {

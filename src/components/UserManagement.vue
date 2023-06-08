@@ -124,7 +124,7 @@
                                             @keyup.enter="register">
                                             <option value="ADMIN">Admin</option>
                                             <option value="EMPLOYEE">Employee</option>
-                                            <option value="USER">User</option>
+                                            <option value="CUSTOMER">Customer</option>
                                         </select>
                                     </div>
                                     <div class="row py-2">

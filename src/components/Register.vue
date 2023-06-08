@@ -75,7 +75,7 @@
                             <label for="role">Role</label>
                             <select id="role" name="role" class="d-input w-100" v-model="this.userRequest.role"
                                 @keyup.enter="register">
-                                <option value="USER" selected>User</option>
+                                <option value="CUSTOMER" selected>Customer</option>
                                 <option value="EMPLOYEE">Employee</option>
                                 <option value="ADMIN">Admin</option>
                             </select>
@@ -109,7 +109,7 @@ export default {
                 bsn: "",
                 phone_number: "",
                 birth_date: "",
-                role: "USER"
+                role: "CUSTOMER"
             },
             error: "",
             password_confirm: "",
@@ -164,7 +164,6 @@ export default {
                 })
                 .catch((error) => {
                     // If response is not OK, print error in console.
-                    console.log(error);
                     this.error = error.response.data.error_message;
                 })
                 .finally(() => {
@@ -173,7 +172,7 @@ export default {
         }
     },
     mounted() {
-        if (useUserSessionStore().isAuthenticated && useUserSessionStore().user.role === "USER") {
+        if (useUserSessionStore().isAuthenticated && useUserSessionStore().user.role === "CUSTOMER") {
             this.$router.push("/dashboard");
         }
 

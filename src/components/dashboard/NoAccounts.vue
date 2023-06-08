@@ -35,7 +35,7 @@ export default {
         await useUserSessionStore().getUser();
         const role = useUserSessionStore().user.role;
 
-        if (role !== "USER") {
+        if (role !== "CUSTOMER") {
             this.isUser = false;
         }
     }
