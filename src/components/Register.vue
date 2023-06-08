@@ -124,6 +124,7 @@ export default {
 
             if (this.userRequest.password !== this.password_confirm) {
                 this.error = "Passwords do not match.";
+                this.isRegistering = false;
                 return;
             }
 
