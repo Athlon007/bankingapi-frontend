@@ -76,7 +76,6 @@
 <script>
 import { useUserSessionStore } from "@/stores/usersession";
 import axios from "@/axios_auth";
-import {nextTick} from "vue";
 
 export default {
   name: "Transfer",
