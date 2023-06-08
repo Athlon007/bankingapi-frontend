@@ -2,7 +2,7 @@
     <section class="d-flex flex-column flex-grow-1 justify-content-center">
         <div class="container p-2 card">
             <h1 class="mx-auto text-center">Login</h1>
-            <div class="alert alert-danger" v-if="this.error">
+            <div class="alert alert-danger col-12 col-md-6 mx-auto" v-if="this.error">
                 {{ this.error }}
             </div>
             <div class="alert alert-success col-12 col-md-6 mx-auto" v-if="this.postRegister">
@@ -19,8 +19,10 @@
                     <input type="password" id="password" name="password" class="d-input w-100" v-model="this.password"
                         @keyup.enter="login" />
                 </div>
-                <div class="form-group mx-auto  col-12 col-md-6">
+                <div class="form-group mx-auto col-12 col-md-6">
                     <button type="button" class="btn btn-primary my-2 w-100" @click="login">Login</button>
+                    <a> <router-link to="/register" class="nav-link d-inline mx-0 px-0" active-class="active">Don't have an
+                            account?</router-link></a>
                 </div>
             </form>
         </div>
@@ -46,6 +48,16 @@ export default {
     },
     methods: {
         login() {
+            if (this.username == "") {
+                this.error = "Please enter a username.";
+                return;
+            }
+
+            if (this.password == "") {
+                this.error = "Please enter a password.";
+                return;
+            }
+
             if (this.isLoggingIn) {
                 return;
             }
@@ -82,5 +94,9 @@ export default {
 .disabled {
     pointer-events: none;
     opacity: 0.4;
+}
+
+.img-bg {
+    background-color: #f9f8fb;
 }
 </style>

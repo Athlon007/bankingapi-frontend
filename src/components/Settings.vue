@@ -8,7 +8,10 @@
     </div>
     <div class="container card p-3">
       <h1>Settings</h1>
-      <div class="row">
+      <div class="col-12">
+        <button class="btn btn-primary" @click="toggleEdit()" :class="editStart ? 'disabled' : ''">Edit Account</button>
+      </div>
+      <div class="row" :class="editStart ? '' : 'disabled'">
         <form>
           <div class="row">
             <div class="col-6 form-group">
@@ -65,11 +68,12 @@
                 v-model="this.userRequest.birth_date" @keyup.enter="updateAccount" />
             </div>
           </div>
-          <button type="button" class="btn btn-primary" v-on:click="updateAccount">Update</button>
+          <button type="button" class="btn btn-primary" @click="updateAccount">Update</button>
         </form>
       </div>
       <div class="row py-2">
-        <div class="">
+        <div class="mty-4">
+          <h3>Danger Zone</h3>
           <button class="btn btn-danger" @click="toggleDialog(true)"> {{ userHasAccount ? "Deactivate Account" :
             "Remove Account" }} </button>
         </div>
@@ -86,7 +90,7 @@
       </div>
       <div class="row d-flex justify-content-evenly">
         <button class="btn btn-danger w-25" @click="deleteAccount()">Yes</button>
-        <button class="btn btn-primary w-25" @click="toggleDialog(false)">No</button>
+        <button id="btn-no" class="btn btn-primary w-25" @click="toggleDialog(false)">No</button>
       </div>
     </dialog>
   </section>
@@ -114,7 +118,8 @@ export default {
       error: "",
       password_confirm: "",
       userHasAccount: false,
-      success: ""
+      success: "",
+      editStart: false
     }
   },
   methods: {
@@ -138,6 +143,7 @@ export default {
           this.error = "";
           this.success = "Account updated successfully!";
           useUserSessionStore().user = response.data;
+          this.editStart = false;
           useEmitter().emit("login");
         })
         .catch(error => {
@@ -148,6 +154,9 @@ export default {
       const dialog = document.getElementById("delete-account-dialog");
       if (enabled) {
         dialog.showModal();
+
+        // Focus on btn-no.
+        document.getElementById("btn-no").focus();
       } else {
         dialog.close();
       }
@@ -168,6 +177,9 @@ export default {
     dismiss() {
       this.error = "";
       this.success = "";
+    },
+    toggleEdit() {
+      this.editStart = true;
     }
   },
   async mounted() {
@@ -196,5 +208,13 @@ dialog {
   box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   padding: 1.6rem;
   max-width: 400px
+}
+
+.disabled {
+  opacity: 0.6;
+}
+
+.mty-4 {
+  margin-top: 1.6rem;
 }
 </style>

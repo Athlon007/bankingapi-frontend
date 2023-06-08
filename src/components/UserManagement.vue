@@ -17,10 +17,10 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <form>
+                    <form id="user-search-form">
                         <div class="d-flex">
                             <input type="text" class="form-control" placeholder="Search" aria-label="Search"
-                                v-model="searchQuery" @keyup.enter="this.searchOnSearchbar($e)" />
+                                v-model="searchQuery" @input="waitAndSearch" />
                             <button type="button" class="btn btn-primary" @click="this.search()">Search</button>
                         </div>
                         <div class="d-inline">
@@ -35,19 +35,20 @@
                     <div class="overflow-auto users-list">
                         <ul class="list-group list-group-horizontal">
                             <li class="list-group-item flex-shrink id-container">ID</li>
-                            <li class="list-group-item flex-shrink no-border-right">First Name</li>
-                            <li class=" list-group-item flex-shrink no-border-right">Last Name</li>
-                            <li class="list-group-item flex-fill text-end">Email</li>
-                            <li class="list-group-item flex-shrink id-container">Has Account?
+                            <li class="list-group-item flex-fill w-25 no-border-right">Full Name</li>
+                            <li class="list-group-item flex-fill w-25">Email</li>
+                            <li class="list-group-item flex-shrink id-container mw-100" title="Account Holder">Acc. Hol.
                             </li>
-                            <li class="list-group-item flex-shrink id-container">Is Active?</li>
+                            <li class="list-group-item flex-shrink id-container mw-100">Active</li>
                         </ul>
                         <UserManagementListItem v-for="user in users" :key="user.id" :user="user" />
                     </div>
-                    <div class="d-flex">
-                        <button class="btn btn-primary" @click="this.previousPage()">Previous</button>
-                        <button class="btn btn-primary mx-2" @click="this.nextPage()">Next</button>
-                        <p>Page: {{ this.page + 1 }}</p>
+                    <div class="d-flex my-2 justify-content-center align-items-center page-navs">
+                        <button class="btn btn-link" @click="this.previousPage()"><i
+                                class="bi bi-arrow-left-circle-fill"></i></button>
+                        <p class="mx-2 my-auto">Page: <strong>{{ this.page + 1 }}</strong></p>
+                        <button class="btn btn-link mx-2" @click="this.nextPage()"><i
+                                class="bi bi-arrow-right-circle-fill"></i></button>
                     </div>
                 </div>
                 <!-- Tabs Panel -->
@@ -101,7 +102,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="bsn">BSN</label>
-                                        <input type="number" id="bsn" name="bsn" class="d-input w-100"
+                                        <input type="text" id="bsn" name="bsn" class="d-input w-100"
                                             v-model="this.edited_user.bsn" @keyup.enter="register"
                                             @keypress="isValidBsn($event)" />
                                     </div>
@@ -133,7 +134,8 @@
                                             <button type="button" class="btn btn-light mx-2" @click="cancel">Cancel</button>
                                             <button type="button"
                                                 v-if="isCurrentUserAdmin && this.edited_user.role === 'ADMIN' || this.edited_user.role !== 'ADMIN'"
-                                                class="btn btn-danger mx-2" @click="this.delete()">{{
+                                                class="btn btn-danger mx-2" @click="this.delete()"
+                                                :class="this.edited_user.active ? '' : 'disabled'">{{
                                                     this.edited_user.current_account == null ? "Delete" : "Deactivate"
                                                 }}</button>
                                         </div>
@@ -155,7 +157,8 @@
                                         <div class="row" v-else>
                                             <p><strong>Account ID:</strong> {{ this.edited_user.current_account.id }}</p>
                                             <p><strong>IBAN:</strong> {{ this.edited_user.current_account.IBAN }}</p>
-                                            <p><strong>Balance:</strong> {{ this.edited_user.current_account.balance }}</p>
+                                            <p><strong>Balance:</strong> {{ this.edited_user.current_account.balance }}
+                                                &euro;</p>
                                             <p><strong>Active: </strong> {{ this.edited_user.current_account.isActive ?
                                                 "Yes" : "No" }}
                                             <form class="my-2">
@@ -196,7 +199,8 @@
                                         <div class="row" v-else>
                                             <p><strong>Account ID:</strong> {{ this.edited_user.saving_account.id }}</p>
                                             <p><strong>IBAN:</strong> {{ this.edited_user.saving_account.IBAN }}</p>
-                                            <p><strong>Balance:</strong> {{ this.edited_user.saving_account.balance }}</p>
+                                            <p><strong>Balance:</strong> {{ this.edited_user.saving_account.balance }}
+                                                &euro;</p>
                                             <p><strong>Active: </strong> {{ this.edited_user.saving_account.isActive ? "Yes"
                                                 : "No" }}
                                             </p>
@@ -227,20 +231,20 @@
                                     v-if="this.edited_user.current_account != null">
                                     <form id="limits-form">
                                         <div class="form-group">
-                                            <label for="transaction_limit">Transaction Limit</label>
+                                            <label for="transaction_limit">Transaction Limit (&euro;)</label>
                                             <input type="number" id="transaction_limit" name="transaction_limit"
                                                 class="d-input w-100" v-model="this.edited_user_limits.transaction_limit"
                                                 @keyup.enter="register" />
                                         </div>
                                         <div class="form-group">
-                                            <label for="daily_transaction_limit">Daily Transaction Limit</label>
+                                            <label for="daily_transaction_limit">Daily Transaction Limit (&euro;)</label>
                                             <input type="number" id="daily_transaction_limit" name="daily_transaction_limit"
                                                 class="d-input w-100"
                                                 v-model="this.edited_user_limits.daily_transaction_limit"
                                                 @keyup.enter="register" min="0" />
                                         </div>
                                         <div class="form-group">
-                                            <label for="remaining_daily_limit">Remaining Daily Limit</label>
+                                            <label for="remaining_daily_limit">Remaining Daily Limit (&euro;)</label>
                                             <input type="number" id="remaining_daily_limit" name="remaining_daily_limit"
                                                 class="d-input w-100"
                                                 v-model="this.edited_user_limits.remaining_daily_transaction_limit" max="0"
@@ -250,7 +254,7 @@
                                             <button type="button" class="btn btn-primary mx-2"
                                                 @click="saveLimits">Save</button>
                                             <button type="button" class="btn btn-light mx-2"
-                                                @click="cancelLimits">Cancel</button>
+                                                @click="cancelLimits">Undo</button>
                                         </div>
                                     </form>
                                 </div>
@@ -277,7 +281,7 @@
             </div>
             <div class="row d-flex justify-content-evenly">
                 <button class="btn btn-danger w-25" @click="deleteAccount()">Yes</button>
-                <button class="btn btn-primary w-25" @click="closeDialog">No</button>
+                <button id="btn-no" class="btn btn-primary w-25" @click="closeDialog">No</button>
             </div>
         </dialog>
     </section>
@@ -352,6 +356,10 @@ export default {
                 });
         },
         previousPage() {
+            if (this.page === 0) {
+                return;
+            }
+
             this.page--;
             this.lastQuery.page = this.page;
             if (this.page < 0) {
@@ -360,6 +368,10 @@ export default {
             this.doQuery(this.lastQuery);
         },
         nextPage() {
+            if (!this.isMorePages) {
+                return;
+            }
+
             this.page++;
             this.lastQuery.page = this.page;
             this.doQuery(this.lastQuery);
@@ -481,6 +493,8 @@ export default {
         },
         delete() {
             document.getElementById("delete-account-dialog").showModal();
+            // focus on btn-no
+            document.getElementById("btn-no").focus();
         },
         deleteAccount() {
             this.error = "";
@@ -500,10 +514,10 @@ export default {
                     const index = this.users.findIndex(user => user.id === this.edited_user.id);
                     this.users.splice(index, 1);
 
+                    this.success = this.edited_user.current_account != null ? "User deactivated." : "User deleted successfully.";
+
                     this.closeDialog();
                     useEmitter().emit("user-edit-save");
-
-                    this.success = "User deleted successfully.";
                 })
                 .catch(error => {
                     this.error = error.response.data.error_message;
@@ -564,6 +578,13 @@ export default {
         dismiss() {
             this.error = "";
             this.success = "";
+        },
+        waitAndSearch() {
+            const query = this.searchQuery;
+            setTimeout(() => {
+                if (query !== this.searchQuery) return;
+                this.search();
+            }, 500);
         }
     },
     async mounted() {
@@ -603,6 +624,14 @@ export default {
             this.doQuery(this.lastQuery);
             useEmitter().emit("user-edit-end");
         });
+
+        // Form: disable enter key
+        document.getElementById("user-search-form").addEventListener("keypress", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                this.search();
+            }
+        });
     }
 }
 </script>
@@ -631,5 +660,14 @@ export default {
 
 .container {
     margin-bottom: 2rem;
+}
+
+.list-group-item {
+    background-color: #d4d6e6;
+}
+
+
+.page-navs>button>i {
+    font-size: 2rem;
 }
 </style>

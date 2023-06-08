@@ -169,10 +169,3 @@ export default {
 
 }
 </script>
-
-<style scoped>
-.disabled {
-    pointer-events: none;
-    opacity: 0.4;
-}
-</style>

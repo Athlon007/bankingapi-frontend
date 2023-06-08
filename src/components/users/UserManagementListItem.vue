@@ -1,9 +1,8 @@
 <template>
     <ul class="list-group list-group-horizontal" @click="activate()" :class="this.isEdited ? 'edited' : ''">
         <li class="list-group-item flex-shrink id-container">{{ user.id }}</li>
-        <li class="list-group-item flex-shrink no-border-right">{{ user.firstname }}</li>
-        <li class="list-group-item flex-fill">{{ user.lastname }}</li>
-        <li class="list-group-item flex-shrink mail">{{ user.email }}</li>
+        <li class="list-group-item flex-fill w-25 no-border-right">{{ user.firstname }} {{ user.lastname }}</li>
+        <li class="list-group-item flex-fill w-25 mail">{{ user.email }}</li>
         <li class="list-group-item flex-shrink id-container">{{ user.current_account == null ? "No" : "Yes" }}</li>
         <li class="list-group-item flex-shrink id-container">{{ user.active ? "Yes" : "No" }}</li>
     </ul>
@@ -16,7 +15,7 @@ export default {
     name: "UserManagementListItem",
     data() {
         return {
-            isEdited: false
+            isEdited: false,
         };
     },
     props: {
@@ -57,5 +56,15 @@ ul:hover>li {
 
 .edited>li {
     background-color: #2c378233 !important;
+}
+
+.list-group-item {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border-radius: 0;
+}
+
+.list-group {
+    border-radius: 0;
 }
 </style>
