@@ -51,4 +51,23 @@ dialog {
   padding: 1.6rem;
   max-width: 400px
 }
+
+.alert-fixed {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: 25rem;
+  z-index: 100;
+  animation: left-to-right 0.1s ease-out;
+}
+
+@-webkit-keyframes left-to-right {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
 </style>

@@ -9,10 +9,11 @@
                 <h2 class="d-inline">User Management</h2>
                 <button type="button" class="btn btn-primary mx-4" @click="this.addUser()">Add User</button>
             </div>
-            <div class="row" v-if="this.error">
-                <div class="alert alert-danger">
-                    {{ this.error }}
-                </div>
+            <div id="error-alert" class="alert alert-danger alert-fixed" v-if="this.error" @click="this.dismiss()">
+                {{ this.error }}
+            </div>
+            <div id="success-alert" class="alert alert-success alert-fixed" v-if="this.success" @click="this.dismiss()">
+                {{ this.success }}
             </div>
             <div class="row">
                 <div class="col-6">
@@ -308,6 +309,7 @@ export default {
             password_confirm: "",
             edited_user_limits: {},
             limits_copy: {},
+            success: ""
         }
     },
     methods: {
@@ -367,6 +369,8 @@ export default {
             this.search();
         },
         createAccount(account_type) {
+            this.error = "";
+            this.success = "";
 
             const request = {
                 accountType: account_type.toUpperCase(),
@@ -379,6 +383,7 @@ export default {
                     if (account_type === "current") {
                         this.edited_user.current_account = response.data;
                         this.users.find(user => user.id === this.edited_user.id).current_account = response.data;
+                        this.success = "Account created successfully.";
 
                         // Request limits for current user.
                         axios.get(`/users/${this.edited_user.id}/limits`)
@@ -400,6 +405,9 @@ export default {
                 });
         },
         setAccountActive(isActive, account_type) {
+            this.error = "";
+            this.success = "";
+
             let account_id = null;
             if (account_type === "current")
                 account_id = this.edited_user.current_account.id;
@@ -420,10 +428,12 @@ export default {
                     if (account_type === "current") {
                         this.edited_user.current_account = response.data;
                         this.users.find(user => user.id === this.edited_user.id).current_account = response.data;
+                        this.success = "Current account updated successfully.";
                     }
                     else {
                         this.edited_user.saving_account = response.data;
                         this.users.find(user => user.id === this.edited_user.id).saving_account = response.data;
+                        this.success = "Saving account updated successfully.";
                     }
                 })
                 .catch(error => {
@@ -432,6 +442,7 @@ export default {
         },
         save() {
             this.error = "";
+            this.success = "";
 
             const request = {
                 username: this.edited_user.username,
@@ -455,6 +466,8 @@ export default {
                     // Replace the user in the list with the updated one.
                     const index = this.users.findIndex(user => user.id === this.edited_user.id);
                     this.users[index] = response.data;
+
+                    this.success = "User updated successfully.";
                 })
                 .catch(error => {
                     this.error = error.response.data.error_message;
@@ -463,11 +476,16 @@ export default {
         },
         cancel() {
             useEmitter().emit("user-edit-end");
+            this.error = "";
+            this.success = "";
         },
         delete() {
             document.getElementById("delete-account-dialog").showModal();
         },
         deleteAccount() {
+            this.error = "";
+            this.success = "";
+
             axios.delete(`/users/${this.edited_user.id}`)
                 .then(response => {
 
@@ -484,6 +502,8 @@ export default {
 
                     this.closeDialog();
                     useEmitter().emit("user-edit-save");
+
+                    this.success = "User deleted successfully.";
                 })
                 .catch(error => {
                     this.error = error.response.data.error_message;
@@ -494,11 +514,13 @@ export default {
         },
         saveLimits() {
             this.error = "";
+            this.success = "";
 
             axios.put(`/users/${this.edited_user.id}/limits`, this.edited_user_limits)
                 .then(response => {
                     this.edited_user_limits = response.data;
                     this.limits_copy = JSON.parse(JSON.stringify(this.edited_user_limits));
+                    this.success = "Limits updated successfully.";
                 })
                 .catch(error => {
                     this.error = error.response.data.error_message;
@@ -515,6 +537,7 @@ export default {
             // PUT /accounts/user_id/account_id/limit
 
             this.error = "";
+            this.success = "";
 
             const user_id = this.edited_user.id;
             const account_id = account_type == 'current' ? this.edited_user.current_account.id : this.edited_user.saving_account.id;
@@ -526,15 +549,21 @@ export default {
                     if (account_type == 'current') {
                         this.edited_user.current_account = response.data;
                         this.users.find(user => user.id === this.edited_user.id).current_account = response.data;
+                        this.success = "Current account absolute limit updated successfully.";
                     }
                     else {
                         this.edited_user.saving_account = response.data;
                         this.users.find(user => user.id === this.edited_user.id).saving_account = response.data;
+                        this.success = "Saving account absolute limit updated successfully.";
                     }
                 })
                 .catch(error => {
                     this.error = error.response.data.error_message;
                 });
+        },
+        dismiss() {
+            this.error = "";
+            this.success = "";
         }
     },
     async mounted() {
