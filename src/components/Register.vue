@@ -143,7 +143,7 @@ export default {
                         if (useUserSessionStore().isAuthenticated) {
                             this.$router.push("/usermanagement", { params: { user_id: response.data.id } });
                         } else {
-                            this.$router.push("/login");
+                            this.$router.push("/login?registration=true");
                         }
                     }
                 })
@@ -169,10 +169,3 @@ export default {
 
 }
 </script>
-
-<style scoped>
-.disabled {
-    pointer-events: none;
-    opacity: 0.4;
-}
-</style>
