@@ -7,7 +7,8 @@
         <div class="container">
             <div class="my-2">
                 <h2 class="d-inline">User Management</h2>
-                <button type="button" class="btn btn-primary mx-4" @click="this.addUser()">Add User</button>
+                <button type="button" class="btn btn-link mx-4" @click="this.addUser()"><i
+                        class="bi bi-person-fill-add px-2"></i>Add User</button>
             </div>
             <div id="error-alert" class="alert alert-danger alert-fixed" v-if="this.error" @click="this.dismiss()">
                 {{ this.error }}
@@ -21,7 +22,8 @@
                         <div class="d-flex">
                             <input type="text" class="form-control" placeholder="Search" aria-label="Search"
                                 v-model="searchQuery" @input="waitAndSearch" />
-                            <button type="button" class="btn btn-primary" @click="this.search()">Search</button>
+                            <button type="button" class="btn btn-primary" @click="this.search()"><i
+                                    class="bi bi-search"></i></button>
                         </div>
                         <div class="d-inline">
                             <div class="form-check">

@@ -122,7 +122,7 @@ export const useUserSessionStore = defineStore('usersession', {
             });
         },
         async getUser() {
-            if (Date.now() > this.expires_at) {
+            if (Date.now() - 30000 > this.expires_at) {
                 console.log('Token expired at. Trying to refresh.');
                 await this.refresh()
             }
