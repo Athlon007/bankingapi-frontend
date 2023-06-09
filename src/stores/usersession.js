@@ -68,8 +68,6 @@ export const useUserSessionStore = defineStore('usersession', {
                         resolve();
                     })
                     .catch((error) => {
-                        console.log(error);
-                        console.log(error.response.data.error_message);
                         reject(error.response.data.error_message);
                     });
             });
