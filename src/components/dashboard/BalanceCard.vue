@@ -2,7 +2,7 @@
     <div class="card-debit" :class="isPrimary ? 'primary-card' : ''" @click="copyIbanToClipboard()">
         <div class="content">
             <h3 class="title">{{ title }}</h3>
-            <h4 class="balance">{{ balance }} {{ currencySymbol }}</h4>
+            <h4 class="balance">{{ formatBalance(balance) }} {{ currencySymbol }}</h4>
             <h5 class="iban">{{ this.iban }}</h5>
             <p class="iban-copied-message">{{ ibanCopied ? "IBAN Copied!" : "&nbsp;" }}</p>
             <!-- Sorry for &nbsp;. I didn't have time to fix it -->
@@ -51,6 +51,14 @@ export default {
             setTimeout(() => {
                 this.ibanCopied = false;
             }, 3000);
+        },
+        formatBalance(balance) {
+            // if the balance is flat .00, then return it as an integer
+            if (balance % 1 === 0) {
+                return balance;
+            }
+
+            return balance.toFixed(2);
         }
     }
 }

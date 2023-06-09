@@ -10,7 +10,7 @@
                 <p class="fw-bold amount"
                     :class="isTransactionAddingMoney(transaction) ? 'positive' : isOwnTransaction(transaction) ? '' : 'negative'">
                     {{
-                        transaction.amount }} {{ currencySymbol }}</p>
+                        formatDecimal(transaction.amount) }} {{ currencySymbol }}</p>
                 <hr />
             </div>
         </div>
@@ -76,6 +76,13 @@ export default {
 
             const thisUsersSavingAccountIban = useUserSessionStore().user.saving_account.IBAN;
             return transaction.sender_iban == thisUsersIban && transaction.receiver_iban == thisUsersSavingAccountIban || transaction.sender_iban == thisUsersSavingAccountIban && transaction.receiver_iban == thisUsersIban;
+        },
+        formatDecimal(number) {
+            if (number % 1 === 0) {
+                return number;
+            }
+
+            return number.toFixed(2);
         }
     },
     mounted() {
