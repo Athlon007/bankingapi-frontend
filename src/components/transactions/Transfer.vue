@@ -54,6 +54,18 @@
         <div class="mb-3">
           <label for="to_iban" class="form-label h5">Beneficiary IBAN</label>
           <span> (NLxxINHO0xxxxxxxxx)</span>
+          <select>
+            <option>IBAN</option>
+            <option>Name</option>
+          </select>
+          <model-select :options="retrievedAccounts" v-model="ibanAccount" v-if="searchByName" label="Name"
+                        option-text="retrievedAccounts.IBAN" option-value="retrievedAccounts.IBAN"
+                        placeholder="Find account by first or last name" pattern="/^([a-zA-Z0-9]+\s)*[a-zA-Z0-9]+$/"
+                        @searchchange="getAccountsByName"/>
+          <model-select :options="retrievedAccounts" v-model="ibanAccount" v-if="searchByIBAN" label="IBAN" placeholder="Find account by IBAN"
+                        option-text="retrievedAccounts.IBAN" option-value="retrievedAccounts.IBAN"
+                        pattern="^[A-Za-z]{2}[0-9]{2}[A-Za-z]{4}[0-9]{10}$"
+                        @searchchange="getAccountsByIBAN"/>
           <input type="text" class="form-control" id="to_iban" placeholder="NLxxINHO0xxxxxxxxx"
                  pattern="^[A-Za-z]{2}[0-9]{2}[A-Za-z]{4}[0-9]{10}$" required>
         </div>
@@ -76,6 +88,8 @@
 <script>
 import { useUserSessionStore } from "@/stores/usersession";
 import axios from "@/axios_auth";
+import 'vue-search-select/dist/VueSearchSelect.css';
+import { ModelSelect } from 'vue-search-select'
 
 export default {
   name: "Transfer",
@@ -89,8 +103,17 @@ export default {
       errorOccurred: false,
       errorMessage: "",
       successfulTransfer: false,
-      successMessage: ""
+      successMessage: "",
+      retrievedAccounts: [],
+      searchByIBAN: false,
+      searchByName: true,
+      ibanAccount: "",
+      searchFirstName: "",
+      searchLastName: ""
     };
+  },
+  components: {
+    ModelSelect
   },
   async mounted() {
     if (!useUserSessionStore().isAuthenticated) {
@@ -202,8 +225,56 @@ export default {
             this.errorOccurred = true;
             this.errorMessage = error.response.data.error_message;
           });
-    }
-  }
+    },
+    getAccountsByIBAN(searchText) {
+      this.errorOccurred = false;
+      this.successfulTransfer = false;
+
+      axios.get("/accounts", {
+        params: {
+          iban: searchText,
+        }
+      })
+          .then(response => {
+            this.retrievedAccounts = response.data.map(account => ({
+              value: account.id,
+              text: account.IBAN,
+            }));
+          })
+          .catch(error => {
+            this.successfulTransfer = false;
+            this.errorOccurred = true;
+            this.errorMessage = error.response.data.error_message;
+          });
+    },
+    getAccountsByName(searchText) {
+      this.errorOccurred = false;
+      this.successfulTransfer = false;
+      // Maybe get the whole text and then split by space and get the last name
+      this.firstName = searchText.split(" ")[0];
+      this.lastName = searchText.split(" ")[1];
+
+      // Maybe add OR statement to search by first name or last name
+      // Make both first name and last name same in that case [0]
+      axios.get("/accounts", {
+        params: {
+          firstName: this.firstName,
+          lastName: this.lastName
+        }
+      })
+          .then(response => {
+            this.retrievedAccounts = response.data.map(account => ({
+              value: account.id,
+              text: account.IBAN,
+            }));
+          })
+          .catch(error => {
+            this.successfulTransfer = false;
+            this.errorOccurred = true;
+            this.errorMessage = error.response.data.error_message;
+          });
+    },
+  },
 };
 </script>
 
