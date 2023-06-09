@@ -76,6 +76,14 @@ dialog {
   opacity: 0.4;
 }
 
+.btn {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.btn:hover {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.35);
+}
+
 .btn-primary {
   background-color: #632bb5;
   border-color: #632bb5;
