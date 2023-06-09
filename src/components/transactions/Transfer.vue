@@ -76,6 +76,7 @@
 <script>
 import { useUserSessionStore } from "@/stores/usersession";
 import axios from "@/axios_auth";
+import {nextTick} from "vue";
 
 export default {
   name: "Transfer",
@@ -92,23 +93,28 @@ export default {
       successMessage: ""
     };
   },
-  mounted() {
+  async mounted() {
     if (!useUserSessionStore().isAuthenticated) {
       this.$router.push("/login");
     }
 
-    useUserSessionStore().getUser().then(user => {
-      this.userPerforming = user;
-      this.user = user;
-      this.userId = user.id;
+    await axios.get("/users/"+ useUserSessionStore().user_id).then(
+      response => {
+        this.userPerforming = response.data;
+        this.user = response.data;
+        this.userId = response.data.id;
 
-      if (this.user?.current_account != null) {
-        this.selectedAccount = this.user?.current_account;
-      } else if (this.user?.saving_account != null) {
-        this.selectedAccount = this.user?.saving_account;
-      } else {
-        this.selectedAccount = null;
+        if (this.user?.current_account != null) {
+          this.selectedAccount = this.user?.current_account;
+        } else if (this.user?.saving_account != null) {
+          this.selectedAccount = this.user?.saving_account;
+        } else {
+          this.selectedAccount = null;
+        }
       }
+    ).catch(error => {
+      this.errorOccurred = true;
+      this.errorMessage = error.response.data.error_message;
     });
   },
   methods: {

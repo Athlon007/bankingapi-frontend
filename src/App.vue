@@ -51,4 +51,48 @@ dialog {
   padding: 1.6rem;
   max-width: 400px
 }
+
+.alert-fixed {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: 25rem;
+  z-index: 100;
+  animation: left-to-right 0.1s ease-out;
+}
+
+@-webkit-keyframes left-to-right {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.btn-primary {
+  background-color: #632bb5;
+  border-color: #632bb5;
+}
+
+.btn-primary:hover {
+  background-color: #4e1f8c;
+  border-color: #4e1f8c;
+}
+
+.btn-primary:active {
+  background-color: #4e1f8c;
+  border-color: #4e1f8c;
+}
+
+.btn-primary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(99, 43, 181, 0.5);
+  background-color: #4e1f8c;
+}
 </style>

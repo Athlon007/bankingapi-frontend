@@ -27,8 +27,7 @@
           </li>
           <li class="nav-item">
             <router-link to="/usermanagement" class="nav-link" active-class="active"
-              v-if="this.user != null && isEmployeeOrAdmin"><i class="bi bi-kanban-fill"></i>User
-              Management</router-link>
+              v-if="this.user != null && isEmployeeOrAdmin"><i class="bi bi-kanban-fill"></i>Management</router-link>
           </li>
         </ul>
         <ul class="navbar-nav">
