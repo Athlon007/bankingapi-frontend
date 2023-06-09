@@ -1,77 +1,91 @@
 <template>
     <section class="d-flex flex-column flex-grow-1 justify-content-center">
-        <div class="container card p-3">
-            <h1>Register</h1>
+        <div class="container card p-3 my-3">
+            <h1 class="mx-auto">Register</h1>
             <div class="alert alert-danger" v-if="this.error">
                 {{ this.error }}
             </div>
             <div>
                 <form :class="this.isRegistering ? 'disabled' : ''">
-                    <div class="row">
-                        <div class="col-6 form-group">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-6 form-group">
                             <label for="username">Username</label>
                             <input type="text" id="username" name="username" class="d-input w-100"
-                                v-model="this.userRequest.username" @keyup.enter="register" />
+                                v-model="this.userRequest.username" @keyup.enter="register" placeholder="User" />
                         </div>
-                        <div class="col-6 form-group">
+                    </div>
+                    <div class="row  justify-content-center">
+                        <div class="col-12 col-md-6 form-group">
                             <label for="email">E-Mail</label>
                             <input type="email" id="email" name="email" class="d-input w-100"
-                                v-model="this.userRequest.email" @keyup.enter="register" />
+                                v-model="this.userRequest.email" @keyup.enter="register" placeholder="mail@example.com" />
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-6 form-group">
+                    <div class="row  justify-content-center">
+                        <div class="col-12 col-md-6 form-group">
                             <label for="password">Password</label>
                             <input type="password" id="password" name="password" class="d-input w-100"
-                                v-model="this.userRequest.password" @keyup.enter="register" />
+                                v-model="this.userRequest.password" @keyup.enter="register" placeholder="Password" />
                         </div>
-                        <div class="col-6 form-group">
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-6 form-group">
                             <label for="password">Confirm Password</label>
                             <input type="password" id="password" name="password" class="d-input w-100"
-                                v-model="this.password_confirm" @keyup.enter="register" />
+                                v-model="this.password_confirm" @keyup.enter="register" placeholder="Confirm Password" />
                         </div>
                     </div>
                     <div class="row justify-content-center">
-                        <div class="col-6 form-group">
+                        <div class="col-12 col-md-6 form-group">
                             <label for="firstname">First Name</label>
                             <input type="text" id="firstname" name="firstname" class="d-input w-100"
-                                v-model="this.userRequest.firstname" @keyup.enter="register" />
+                                v-model="this.userRequest.firstname" @keyup.enter="register" placeholder="John" />
                         </div>
-                        <div class="col-6 form-group">
+                    </div>
+                    <div class="row  justify-content-center">
+                        <div class="col-12 col-md-6 form-group">
                             <label for="lastname">Last Name</label>
                             <input type="text" id="lastname" name="lastname" class="d-input w-100"
-                                v-model="this.userRequest.lastname" @keyup.enter="register" />
+                                v-model="this.userRequest.lastname" @keyup.enter="register" placeholder="Doe" />
                         </div>
                     </div>
                     <div class="row justify-content-center">
-                        <div class="col-6 form-group">
+                        <div class="col-12 col-md-6 form-group">
                             <label for="bsn">BSN</label>
-                            <input type="number" id="bsn" name="bsn" class="d-input w-100" v-model="this.userRequest.bsn"
-                                @keyup.enter="register" @keypress="isValidBsn($event)" />
+                            <input type="text" id="bsn" name="bsn" class="d-input w-100" v-model="this.userRequest.bsn"
+                                @keyup.enter="register" @keypress="isValidBsn($event)" placeholder="123456789" />
                         </div>
-                        <div class="col-6 form-group">
+                    </div>
+                    <div class="row  justify-content-center">
+                        <div class="col-12 col-md-6 form-group">
                             <label for="phone_number">Phone Number</label>
                             <input type="tel" id="phone_number" name="phone_number" class="d-input w-100"
-                                v-model="this.userRequest.phone_number" @keyup.enter="register" />
+                                v-model="this.userRequest.phone_number" @keyup.enter="register" placeholder="0612345678" />
                         </div>
                     </div>
                     <div class="row justify-content-center">
-                        <div class="col-6 form-group">
+                        <div class="col-12 col-md-6 form-group">
                             <label for="birth_date">Birth Date</label>
                             <input type="date" id="birth_date" name="birth_date" class="d-input w-100"
                                 v-model="this.userRequest.birth_date" @keyup.enter="register" />
                         </div>
-                        <div class="col-6 form-group" v-if="this.is_current_user_admin">
+                    </div>
+                    <div class="row  justify-content-center">
+                        <div class="col-12 col-md-6 form-group" v-if="this.is_current_user_admin">
                             <label for="role">Role</label>
                             <select id="role" name="role" class="d-input w-100" v-model="this.userRequest.role"
                                 @keyup.enter="register">
-                                <option value="USER" selected>User</option>
+                                <option value="CUSTOMER" selected>Customer</option>
                                 <option value="EMPLOYEE">Employee</option>
                                 <option value="ADMIN">Admin</option>
                             </select>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" v-on:click="register">Register</button>
+                    <div class="row justify-content-center my-2">
+                        <div class="col-12 col-md-6">
+                            <button type="button" class="btn btn-primary" v-on:click="register">Register</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -95,7 +109,7 @@ export default {
                 bsn: "",
                 phone_number: "",
                 birth_date: "",
-                role: "USER"
+                role: "CUSTOMER"
             },
             error: "",
             password_confirm: "",
@@ -124,6 +138,7 @@ export default {
 
             if (this.userRequest.password !== this.password_confirm) {
                 this.error = "Passwords do not match.";
+                this.isRegistering = false;
                 return;
             }
 
@@ -143,13 +158,12 @@ export default {
                         if (useUserSessionStore().isAuthenticated) {
                             this.$router.push("/usermanagement", { params: { user_id: response.data.id } });
                         } else {
-                            this.$router.push("/login");
+                            this.$router.push("/login?registration=true");
                         }
                     }
                 })
                 .catch((error) => {
                     // If response is not OK, print error in console.
-                    console.log(error);
                     this.error = error.response.data.error_message;
                 })
                 .finally(() => {
@@ -158,7 +172,7 @@ export default {
         }
     },
     mounted() {
-        if (useUserSessionStore().isAuthenticated && useUserSessionStore().user.role === "USER") {
+        if (useUserSessionStore().isAuthenticated && useUserSessionStore().user.role === "CUSTOMER") {
             this.$router.push("/dashboard");
         }
 
@@ -169,10 +183,3 @@ export default {
 
 }
 </script>
-
-<style scoped>
-.disabled {
-    pointer-events: none;
-    opacity: 0.4;
-}
-</style>

@@ -1,22 +1,21 @@
 <template>
-    <div class="card">
+    <div class="card col-3 py-4">
         <div class="row">
             <h2>Limits</h2>
         </div>
         <div class="row">
-            <div class="row col-6">
-                <h3>Transaction Limit:</h3>
+            <div class="row my-2 col-12">
+                <h3>Transaction Limit</h3>
                 <h4 class="fw-bold">{{ limits.transaction_limit }} {{ currencySymbol }}</h4>
             </div>
-            <div class="row col-6">
-                <h3>Daily Transaction Limit:</h3>
+            <div class="row my-2 col-12">
+                <h3>Daily Limit</h3>
                 <h4 class="fw-bold">{{ limits.daily_transaction_limit }} {{ currencySymbol }}</h4>
             </div>
-        </div>
-        <div class="row">
-            <div class="row col-6">
-                <h3>Remaining Daily Transaction Limit:</h3>
-                <h4 class="fw-bold">{{ limits.remaining_daily_transaction_limit }} {{ currencySymbol }}</h4>
+            <div class="row col-12">
+                <h3>Remaining Daily Limit</h3>
+                <h4 class="fw-bold" :class="limits.remaining_daily_transaction_limit == 0 ? 'out-of-limits' : ''">{{
+                    limits.remaining_daily_transaction_limit }} {{ currencySymbol }}</h4>
             </div>
         </div>
     </div>
@@ -56,5 +55,20 @@ export default {
 .card>div {
     margin-left: 1rem;
     margin-right: 1rem;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+h3 {
+    font-size: 0.8rem;
+    margin-bottom: 2px;
+    color: #777
+}
+
+.out-of-limits {
+    color: red;
 }
 </style>
