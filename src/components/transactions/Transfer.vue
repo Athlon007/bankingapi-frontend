@@ -47,7 +47,7 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="amount" class="form-label h5">Amount</label>
+          <label for="amount" class="form-label h5">Amount <small class="text-secondary-emphasis">*required</small></label>
           <div class="d-flex justify-content-center">
             <label for="amount" class="align-middle p-2 h5" style="padding-left: 0 !important;">&euro;</label>
             <input type="number" step="0.01" min="0" class="form-control h5" id="amount" placeholder="0.00" required>
@@ -56,27 +56,31 @@
         <div class="mb-3">
           <label for="to_iban" class="form-label h5">Beneficiary IBAN</label>
           <span> (NLxxINHO0xxxxxxxxx)</span>
-          <div class="form-group">
-            <label class="form-label my-0" for="search-method">Search Method</label>
-            <select class="form-select" v-model="searchMethod" id="search-method">
-              <option value="Name">Name</option>
-              <option value="IBAN">IBAN</option>
-            </select>
-            <label class="form-label my-0" for="search-field">Query</label>
-            <input id="search-field" type="text" class="form-control custom-select my-1"
-              :placeholder="this.searchMethod == 'IBAN' ? 'Search by IBAN...' : 'Search by name...'" v-model="search"
-              @input="searchAccounts" list="searchResults" @change="applyResult" />
-            <datalist id="searchResults" @click="applyResult" @change="applyResult"></datalist>
+          <div class="form-group row">
+            <div class="col-md-2">
+              <label class="form-label my-0" for="search-method">Search By</label>
+              <select class="form-select my-1" v-model="searchMethod" id="search-method">
+                <option value="Name">Name</option>
+                <option value="IBAN">IBAN</option>
+              </select>
+            </div>
+            <div class="col-md-10">
+              <label class="form-label my-0" for="search-field">{{ this.searchMethod == 'IBAN' ? 'IBAN' : 'Name' }}</label>
+              <input id="search-field" type="text" class="form-control custom-select my-1"
+                     :placeholder="this.searchMethod == 'IBAN' ? 'Search by IBAN...' : 'Search by name...'" v-model="search"
+                     @input="searchAccounts" list="searchResults" @change="applyResult" />
+              <datalist id="searchResults" @click="applyResult" @change="applyResult"></datalist>
+            </div>
           </div>
           <div class="form-group my-2">
-            <label class="form-label my-0">IBAN</label>
+            <label class="form-label my-0">IBAN <small class="text-secondary-emphasis">*required</small></label>
             <input type="text" class="form-control" id="to_iban" placeholder="NLxxINHO0xxxxxxxxx"
               pattern="^[A-Za-z]{2}[0-9]{2}[A-Za-z]{4}[0-9]{10}$" required v-model="ibanAccount">
           </div>
         </div>
         <div class="mb-3">
           <label for="description" class="form-label h5">Description</label>
-          <input type="text" class="form-control" id="description" placeholder="Description" required
+          <input type="text" class="form-control" id="description" placeholder="Description"
             v-model="description">
         </div>
         <div class="alert alert-warning" role="alert" v-if="!selectedAccount?.isActive">
@@ -351,17 +355,9 @@ section {
   padding-bottom: 3em;
 }
 
-.frame {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
+.card {
   border-radius: 10px;
-  padding: 20px;
-}
-
-@media (max-width: 768px) {
-  .frame {
-    border-radius: 0px;
-  }
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
 
 datalist {
