@@ -31,6 +31,7 @@
 
 <script>
 import { useUserSessionStore } from "../stores/usersession.js";
+import useEmitter from '../emitter.js';
 
 export default {
     name: "LoginView",
@@ -86,6 +87,10 @@ export default {
         if (this.$route.query.registration) {
             this.postRegister = true;
         }
+
+        useEmitter().on('login', () => {
+            this.$router.push('/dashboard');
+        });
     }
 }
 </script>
