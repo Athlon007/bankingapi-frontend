@@ -19,8 +19,8 @@ export default {
   <div class="w-100">
     <footer class="p-4">
       <p class="text-center text-body-secondary">© 2023 IT2A Group 2</p>
-      <p class="text-center text-body-secondary">This website is not actually InHolland's website, instead it is an
-        university project.</p>
+      <p class="text-center text-body-secondary">This is not InHolland's official website. This is an university project.
+      </p>
       <p class="text-center text-body-secondary">If something doesn't work, <a
           href="https://www.youtube.com/watch?v=nqxVMLVe62U" target="_blank">Blame It on the Boogie.</a></p>
     </footer>

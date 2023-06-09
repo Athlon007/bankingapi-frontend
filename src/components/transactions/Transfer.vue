@@ -312,6 +312,9 @@ export default {
                 const option = document.createElement("option");
                 let iban = user.iban;
                 if (iban == null) {
+                  if (user.current_account == null) {
+                    return;
+                  }
                   iban = user.current_account.IBAN;
                 }
 
@@ -327,6 +330,7 @@ export default {
             .catch(error => {
               this.successfulTransfer = false;
               this.errorOccurred = true;
+              console.log(error);
               this.errorMessage = error.response.data.error_message;
             });
         }
