@@ -15,7 +15,13 @@
               {{ this.error }}
             </div>
           </div>
+          <div v-if="transaction_message" class="mt-4">
+            <div v-if="transaction_successfull" class="alert alert-success">
+              {{ transaction_message }}
+            </div>
+          </div>
           <div class="account-info mb-4">
+            <p class="text-center"><strong>Account Holder:</strong> {{ user?.firstname }} {{ user?.lastname }}</p>
             <p class="text-center"><strong>Account Balance:</strong> {{ account?.balance.toFixed(2) }} {{ currencySymbol
             }}
             </p>
@@ -24,7 +30,8 @@
           <form @submit.prevent="processTransaction">
             <div class="form-group">
               <label for="amount">Amount</label>
-              <input type="number" step="0.01" min="0" class="form-control h5" id="amount" v-model="amount" placeholder="0.00" required>
+              <input type="number" step="0.01" min="0" class="form-control h5" id="amount" v-model="amount"
+                placeholder="0.00" required>
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary btn-lg withdraw-btn"
@@ -33,14 +40,6 @@
                 @click.prevent="processTransaction('deposit')">Deposit</button>
             </div>
           </form>
-          <div v-if="transaction_message" class="mt-4">
-            <div v-if="transaction_successfull" class="alert alert-success">
-              {{ transaction_message }}
-            </div>
-            <div v-else class="alert alert-danger">
-              {{ transaction_message }}
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -130,11 +129,56 @@ export default {
             this.transaction_successfull = false;
           });
       }
+
+      this.amount = "";
     },
   }
 };
 </script>
 <style>
+.atm-card {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.account-info {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.withdraw-btn {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  margin-top: 3%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.deposit-btn {
+  background-color: #28a745;
+  border-color: #28a745;
+  margin-top: 3%;
+  margin-left: 3%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-lg {
+  padding: 0.5rem 2rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  border-radius: 0.3rem;
+}
+
+.btn-lg:focus,
+.btn-lg.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.5);
+}
+</style>
+<!-- <style>
 .atm-card {
   background-color: #f2f2f2;
   border: 1px solid #ddd;
@@ -173,4 +217,4 @@ export default {
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.5);
 }
-</style>
+</style> -->
