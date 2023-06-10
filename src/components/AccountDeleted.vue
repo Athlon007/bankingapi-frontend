@@ -1,9 +1,13 @@
 <template>
-    <div class="container">
-        <h1 class="text-center">Account {{ this.wasDeactivated ? "Deactivated" : "Deleted" }}</h1>
-        <p class="text-center">Your account has been {{ this.wasDeactivated ? "deactivated" : "deleted" }}.</p>
-        <p class="text-center">You'll be redirected automatically within 5 seconds...</p>
-        <button class="btn btn-primary col-12" @click="this.goHome()">Click To Go Home</button>
+    <div class="container d-flex justify-content-center align-items-center">
+        <div>
+            <h1 class="text-center">Account {{ this.wasDeactivated ? "Deactivated" : "Deleted" }}</h1>
+            <p class="text-center">Your account has been {{ this.wasDeactivated ? "deactivated" : "deleted" }}.</p>
+            <p class="text-center">You'll be redirected automatically within 5 seconds...</p>
+            <div class="col-12 d-flex justify-content-center">
+                <button class="btn btn-primary" @click="this.goHome()">Click To Go Home</button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -33,4 +37,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+    height: 75vh;
+}
+</style>

@@ -62,14 +62,12 @@ export const useUserSessionStore = defineStore('usersession', {
                         // Set timer to refresh token.
                         setTimeout(() => {
                             this.refresh();
-                        }, this.expires_at - Date.now() - 1000);
+                        }, this.expires_at - Date.now() - 30000);
 
                         useEmitter().emit('login', this.user_id);
                         resolve();
                     })
                     .catch((error) => {
-                        console.log(error);
-                        console.log(error.response.data.error_message);
                         reject(error.response.data.error_message);
                     });
             });
@@ -122,7 +120,7 @@ export const useUserSessionStore = defineStore('usersession', {
             });
         },
         async getUser() {
-            if (Date.now() > this.expires_at) {
+            if (Date.now() - 30000 > this.expires_at) {
                 console.log('Token expired at. Trying to refresh.');
                 await this.refresh()
             }

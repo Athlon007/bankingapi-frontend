@@ -15,22 +15,29 @@
               {{ this.error }}
             </div>
           </div>
+          <div v-if="transaction_message" class="mt-4">
+            <div v-if="transaction_successfull" class="alert alert-success">
+              {{ transaction_message }}
+            </div>
+          </div>
           <div class="account-info mb-4">
-            <p class="text-center"><strong>Account Balance:</strong> {{ user?.current_account.balance }} {{ currencySymbol
+            <p class="text-center"><strong>Account Holder:</strong> {{ user?.firstname }} {{ user?.lastname }}</p>
+            <p class="text-center"><strong>Account Balance:</strong> {{ account?.balance.toFixed(2) }} {{ currencySymbol
             }}
             </p>
-            <p class="text-center"><strong>IBAN:</strong> {{ user?.current_account.IBAN }}</p>
+            <p class="text-center"><strong>IBAN:</strong> {{ account?.IBAN }}</p>
           </div>
           <form @submit.prevent="processTransaction">
             <div class="form-group">
               <label for="amount">Amount</label>
-              <input type="number" id="amount" class="form-control" v-model="amount" required>
+              <input type="number" step="0.01" min="0" class="form-control h5" id="amount" v-model="amount"
+                placeholder="0.00" required>
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary btn-lg withdraw-btn"
-                @click.prevent="processTransaction('withdraw')">Withdraw</button>
+                      @click="isDeposit = false">Withdraw</button>
               <button type="submit" class="btn btn-primary btn-lg deposit-btn"
-                @click.prevent="processTransaction('deposit')">Deposit</button>
+                      @click="isDeposit = true">Deposit</button>
             </div>
           </form>
         </div>
@@ -48,9 +55,14 @@ export default {
   data() {
     return {
       user: null,
-      amount: 0,
       currency: "",
-      currencySymbol: "\u20AC"
+      amount: "",
+      currencySymbol: "\u20AC",
+      error: "",
+      account: null,
+      transaction_message: "",
+      transaction_successfull: null,
+      isDeposit: false,
     };
   },
   mounted() {
@@ -63,52 +75,78 @@ export default {
       if (user.current_account == null) {
         this.$router.push("/accounts");
       }
-      else{
-        this.currency = user.current_account.currency_type;
+      else {
+        this.account = user.current_account;
       }
     });
   },
   methods: {
+    getUserInformation() {
+      axios
+        .get("/users/" + this.user?.id)
+        .then(response => {
+          this.user = response.data;
+          this.account = response.data.current_account;
+        })
+        .catch(error => {
+          this.error = error.response.data.error_message;
+        });
+    },
     processTransaction(transactionType) {
+      this.error = "";
+      this.transaction_message = "";
+      if (this.amount <= 0) {
+        this.error = "Amount must be greater than 0";
+        return;
+      }
       const transactionData = {
-        IBAN: this.user.current_account.IBAN,
+        IBAN: this.account?.IBAN,
         amount: this.amount,
-        currencyType: this.currency
+        currencyType: this.account?.currency_type,
       };
 
-      if (transactionType === "withdraw") {
+      if (!this.isDeposit) {
         axios
           .post("transactions/withdraw", transactionData)
           .then(response => {
-            this.user.current_account.balance = response.data.balance;
+            this.getUserInformation();
+            this.transaction_message = response.data.description;
+            this.transaction_successfull = true;
           })
           .catch(error => {
             this.error = error.response.data.error_message;
+            this.transaction_successfull = false;
           })
-      } else if (transactionType === "deposit") {
+      } else if (this.isDeposit) {
         axios
           .post("/transactions/deposit", transactionData)
           .then(response => {
-            this.user.current_account.balance = response.data.balance;
+            this.getUserInformation();
+            this.transaction_message = response.data.description;
+            this.transaction_successfull = true;
           })
           .catch(error => {
             this.error = error.response.data.error_message;
+            this.transaction_successfull = false;
           });
       }
+
+      this.amount = "";
     },
   }
 };
 </script>
 <style>
 .atm-card {
-  background-color: #f2f2f2;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 .account-info {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ccc;
   padding-bottom: 15px;
   margin-bottom: 15px;
 }
@@ -117,6 +155,7 @@ export default {
   background-color: #dc3545;
   border-color: #dc3545;
   margin-top: 3%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .deposit-btn {
@@ -124,6 +163,7 @@ export default {
   border-color: #28a745;
   margin-top: 3%;
   margin-left: 3%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .btn-lg {

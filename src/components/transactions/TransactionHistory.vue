@@ -67,11 +67,11 @@
         <div class="row">
           <div class="col">
             <label for="startDate" class="fw-bolder">Start Date</label>
-            <input id="startDate" type="datetime-local" v-model="startDate" class="m-2">
+            <input id="startDate" type="date" v-model="startDate" class="m-2">
           </div>
           <div class="col">
             <label for="endDate" class="fw-bolder">End Date</label>
-            <input id="endDate" type="datetime-local" v-model="endDate" class="m-2">
+            <input id="endDate" type="date" v-model="endDate" class="m-2">
           </div>
         </div>
         <button class="btn btn-primary" type="submit">Filter</button>
@@ -88,8 +88,8 @@
             <th scope="col">ID</th>
             <th scope="col">Type</th>
             <th scope="col">Performer</th>
-            <th scope="col">Receiver IBAN</th>
             <th scope="col">Sender IBAN</th>
+            <th scope="col">Receiver IBAN</th>
             <th scope="col">Amount</th>
             <th scope="col">Timestamp</th>
             <th scope="col">Description</th>
@@ -100,9 +100,10 @@
             <th scope="row">{{ transaction.id }}</th>
             <td>{{ transaction.transactionType }}</td>
             <td>{{ transaction.username }}</td>
-            <td>{{ transaction.receiver_iban }}</td>
             <td>{{ transaction.sender_iban }}</td>
-            <td>{{ transaction.amount }}</td>
+            <td>{{ transaction.receiver_iban }}</td>
+            <td class="fw-bold" :class="isTransactionAddingMoney(transaction) ? 'positive' : isOwnTransaction(transaction) ? '' : 'negative'">
+              {{ transaction.amount.toFixed(2) }} {{currencySymbol}}</td>
             <td>{{ formatDate(transaction.timestamp) }}</td>
             <td>{{ transaction.description }}</td>
           </tr>
@@ -150,12 +151,18 @@ export default {
       userReceiverID: null,
     };
   },
-  mounted() {
+  props: {
+    currencySymbol: {
+      type: String,
+      default: "\u20AC"
+    }
+  },
+  async mounted() {
     if (!useUserSessionStore().isAuthenticated) {
       this.$router.push("/login");
     }
 
-    useUserSessionStore().getUser().then(user => {
+    await useUserSessionStore().getUser().then(user => {
       this.user = user;
     });
 
@@ -223,8 +230,8 @@ export default {
           limit: this.limit,
           minAmount: this.minAmount,
           maxAmount: this.maxAmount,
-          startDate: this.startDate,
-          endDate: this.endDate,
+          startDate: this.startDate ? moment(this.startDate).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+          endDate: this.endDate ? moment(this.endDate).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
           transactionID: this.transactionID,
           ibanSender: this.ibanSender,
           ibanReceiver: this.ibanReceiver,
@@ -267,7 +274,27 @@ export default {
       } else if (event.target.value == "UserID") {
         this.activateFilterByUserIDs();
       }
-    }
+    },
+    isTransactionAddingMoney(transaction) {
+      const thisUsersIban = useUserSessionStore().user.current_account.IBAN;
+      if (transaction.transactionType === 'TRANSACTION') {
+        return transaction.receiver_iban == thisUsersIban;
+      } else if (transaction.transactionType === 'DEPOSIT') {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    isOwnTransaction(transaction) {
+      const thisUsersIban = useUserSessionStore().user.current_account.IBAN;
+
+      if (useUserSessionStore().user.saving_account == null) {
+        return false;
+      }
+
+      const thisUsersSavingAccountIban = useUserSessionStore().user.saving_account.IBAN;
+      return transaction.sender_iban == thisUsersIban && transaction.receiver_iban == thisUsersSavingAccountIban || transaction.sender_iban == thisUsersSavingAccountIban && transaction.receiver_iban == thisUsersIban;
+    },
   }
 };
 </script>
@@ -278,5 +305,13 @@ tbody>tr {
 }
 section {
   background-color: #F9F8FB;
+}
+
+.positive {
+  color: green;
+}
+
+.negative {
+  color: red;
 }
 </style>
