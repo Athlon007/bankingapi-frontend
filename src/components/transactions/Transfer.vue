@@ -47,7 +47,8 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="amount" class="form-label h5">Amount <small class="text-secondary-emphasis">*required</small></label>
+          <label for="amount" class="form-label h5">Amount <small
+              class="text-secondary-emphasis">*required</small></label>
           <div class="d-flex justify-content-center">
             <label for="amount" class="align-middle p-2 h5" style="padding-left: 0 !important;">&euro;</label>
             <input type="number" step="0.01" min="0" class="form-control h5" id="amount" placeholder="0.00" required>
@@ -65,10 +66,11 @@
               </select>
             </div>
             <div class="col-md-10">
-              <label class="form-label my-0" for="search-field">{{ this.searchMethod == 'IBAN' ? 'IBAN' : 'Name' }}</label>
+              <label class="form-label my-0" for="search-field">{{ this.searchMethod == 'IBAN' ? 'IBAN' : 'Name'
+              }}</label>
               <input id="search-field" type="text" class="form-control custom-select my-1"
-                     :placeholder="this.searchMethod == 'IBAN' ? 'Search by IBAN...' : 'Search by name...'" v-model="search"
-                     @input="searchAccounts" list="searchResults" @change="applyResult" />
+                :placeholder="this.searchMethod == 'IBAN' ? 'Search by IBAN...' : 'Search by name...'" v-model="search"
+                @input="searchAccounts" list="searchResults" @change="applyResult" />
               <datalist id="searchResults" @click="applyResult" @change="applyResult"></datalist>
             </div>
           </div>
@@ -80,8 +82,7 @@
         </div>
         <div class="mb-3">
           <label for="description" class="form-label h5">Description</label>
-          <input type="text" class="form-control" id="description" placeholder="Description"
-            v-model="description">
+          <input type="text" class="form-control" id="description" placeholder="Description" v-model="description">
         </div>
         <div class="alert alert-warning" role="alert" v-if="!selectedAccount?.isActive">
           The current account is inactive and cannot be used for transfers.
@@ -102,8 +103,6 @@
 <script>
 import { useUserSessionStore } from "@/stores/usersession";
 import axios from "@/axios_auth";
-import 'vue-search-select/dist/VueSearchSelect.css';
-import { ModelSelect } from 'vue-search-select'
 
 export default {
   name: "Transfer",
@@ -127,9 +126,6 @@ export default {
       selectedIban: "",
       description: ""
     };
-  },
-  components: {
-    ModelSelect
   },
   async mounted() {
     if (!useUserSessionStore().isAuthenticated) {

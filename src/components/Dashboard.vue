@@ -22,12 +22,12 @@ import NoAccounts from "./dashboard/NoAccounts.vue";
         </div>
         <div class="row d-flex align-items-center">
           <div class="col d-inline" v-if="user?.current_account != null">
-            <BalanceCard :currencySymbol="this.currencySymbol" title="My Balance" :balance="user?.total_balance"
-              iban="Total" :isPrimary=true />
-            <BalanceCard :currencySymbol="this.currencySymbol" title="Current Account"
-              :balance="user?.current_account?.balance" :iban="user?.current_account?.IBAN" />
-            <BalanceCard v-if="this.user?.saving_account != null" :currencySymbol="this.currencySymbol"
-              title="Saving Account" :balance="user?.saving_account?.balance" :iban="user?.saving_account?.IBAN" />
+            <BalanceCard title="My Balance" :balance="user?.total_balance" iban="Total" :isPrimary=true currency="EURO" />
+            <BalanceCard title="Current Account" :balance="user?.current_account?.balance"
+              :iban="user?.current_account?.IBAN" :currency="user?.current_account?.currency_type" />
+            <BalanceCard v-if="user?.saving_account != null" title="Saving Account"
+              :balance="user?.saving_account?.balance" :iban="user?.saving_account?.IBAN"
+              :currency="user?.saving_account?.currency_type" />
             <div v-else class="d-inline add-account" @click="showDialog()">
               <i class="bi bi-plus-circle-fill"></i>
             </div>
@@ -36,7 +36,7 @@ import NoAccounts from "./dashboard/NoAccounts.vue";
             <NoAccounts />
           </div>
         </div>
-        <div v-if="this.user?.current_account != null">
+        <div v-if="user != null && user?.current_account != null">
           <div class="row d-flex my-4 mx-1 justify-content-evenly">
             <LatestTransactions />
             <LimitsCard />
@@ -75,8 +75,6 @@ export default {
   data() {
     return {
       user: null,
-      // EUR
-      currencySymbol: "\u20AC",
       isLoading: true
     };
   },

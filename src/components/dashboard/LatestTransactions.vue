@@ -14,6 +14,11 @@
                 <hr />
             </div>
         </div>
+        <div v-else-if="isLoading" class="row">
+            <div class="spinner-border text-primary d-inline" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
         <div v-else class="row">
             <p>No transactions yet.</p>
         </div>
@@ -32,7 +37,8 @@ export default {
     data() {
         return {
             lastTransactions: [],
-            hasTransactions: false
+            hasTransactions: false,
+            isLoading: true
         }
     },
     props: {

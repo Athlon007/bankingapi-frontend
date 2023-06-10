@@ -2,8 +2,8 @@
     <div class="card-debit" :class="isPrimary ? 'primary-card' : ''" @click="copyIbanToClipboard()">
         <div class="content">
             <h3 class="title">{{ title }}</h3>
-            <h4 class="balance">{{ formatBalance(balance) }} {{ currencySymbol }}</h4>
-            <h5 class="iban">{{ this.iban }}</h5>
+            <h4 class="balance">{{ formatBalance(balance) }} {{ translateCurrencyToSymbol() }}</h4>
+            <h5 class="iban">{{ iban }}</h5>
             <p class="iban-copied-message">{{ ibanCopied ? "IBAN Copied!" : "&nbsp;" }}</p>
             <!-- Sorry for &nbsp;. I didn't have time to fix it -->
         </div>
@@ -14,10 +14,6 @@
 export default {
     name: "BalanceCard",
     props: {
-        currencySymbol: {
-            type: String,
-            required: true
-        },
         title: {
             type: String,
             required: true
@@ -33,6 +29,11 @@ export default {
             type: Boolean,
             required: false,
             default: false
+        },
+        currency: {
+            type: String,
+            required: false,
+            default: "EURO"
         }
     },
     data() {
@@ -55,6 +56,9 @@ export default {
             }
 
             return balance.toFixed(2);
+        },
+        translateCurrencyToSymbol() {
+            return "\u20AC";
         }
     },
     async mounted() {
