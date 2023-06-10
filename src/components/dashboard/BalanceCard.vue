@@ -14,10 +14,6 @@
 export default {
     name: "BalanceCard",
     props: {
-        user: {
-            type: Object,
-            required: true
-        },
         currencySymbol: {
             type: String,
             required: true

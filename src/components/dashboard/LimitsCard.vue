@@ -6,16 +6,16 @@
         <div class="row">
             <div class="row my-2 col-12">
                 <h3>Transaction Limit</h3>
-                <h4 class="fw-bold">{{ limits.transaction_limit }} {{ currencySymbol }}</h4>
+                <h4 class="fw-bold">{{ limits?.transaction_limit }} {{ currencySymbol }}</h4>
             </div>
             <div class="row my-2 col-12">
                 <h3>Daily Limit</h3>
-                <h4 class="fw-bold">{{ limits.daily_transaction_limit }} {{ currencySymbol }}</h4>
+                <h4 class="fw-bold">{{ limits?.daily_transaction_limit }} {{ currencySymbol }}</h4>
             </div>
             <div class="row col-12">
                 <h3>Remaining Daily Limit</h3>
-                <h4 class="fw-bold" :class="limits.remaining_daily_transaction_limit == 0 ? 'out-of-limits' : ''">{{
-                    formatDecimal(limits.remaining_daily_transaction_limit) }} {{ currencySymbol }}</h4>
+                <h4 class="fw-bold" :class="limits?.remaining_daily_transaction_limit == 0 ? 'out-of-limits' : ''">{{
+                    formatDecimal(limits?.remaining_daily_transaction_limit) }} {{ currencySymbol }}</h4>
             </div>
         </div>
     </div>

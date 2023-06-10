@@ -22,11 +22,11 @@ import NoAccounts from "./dashboard/NoAccounts.vue";
         </div>
         <div class="row d-flex align-items-center">
           <div class="col d-inline" v-if="user?.current_account != null">
-            <BalanceCard :user="this.user" :currencySymbol="this.currencySymbol" title="My Balance"
-              :balance="user?.total_balance" iban="Total" :isPrimary=true />
-            <BalanceCard :user="this.user" :currencySymbol="this.currencySymbol" title="Current Account"
+            <BalanceCard :currencySymbol="this.currencySymbol" title="My Balance" :balance="user?.total_balance"
+              iban="Total" :isPrimary=true />
+            <BalanceCard :currencySymbol="this.currencySymbol" title="Current Account"
               :balance="user?.current_account?.balance" :iban="user?.current_account?.IBAN" />
-            <BalanceCard v-if="this.user?.saving_account != null" :user="this.user" :currencySymbol="this.currencySymbol"
+            <BalanceCard v-if="this.user?.saving_account != null" :currencySymbol="this.currencySymbol"
               title="Saving Account" :balance="user?.saving_account?.balance" :iban="user?.saving_account?.IBAN" />
             <div v-else class="d-inline add-account" @click="showDialog()">
               <i class="bi bi-plus-circle-fill"></i>
@@ -67,7 +67,10 @@ import axios from "../axios_auth";
 export default {
   name: "Home",
   components: {
-    LimitsCard
+    LimitsCard,
+    BalanceCard,
+    LatestTransactions,
+    NoAccounts
   },
   data() {
     return {
