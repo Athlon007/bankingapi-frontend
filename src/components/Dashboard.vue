@@ -8,29 +8,39 @@ import NoAccounts from "./dashboard/NoAccounts.vue";
 <template>
   <section class="d-flex flex-column flex-grow-1">
     <div class="container">
-      <div class="row">
-        <h2 class="mt-3 mt-lg-5">Welcome, <strong class="accent">{{ user?.firstname }}</strong></h2>
+      <div class="row" v-if="isLoading">
+        <div class="col my-4 d-inline">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <h2 class="d-inline mx-2">Loading...</h2>
+        </div>
       </div>
-      <div class="row d-flex align-items-center">
-        <div class="col d-inline" v-if="user?.current_account != null">
-          <BalanceCard :user="this.user" :currencySymbol="this.currencySymbol" title="My Balance"
-            :balance="user?.total_balance" iban="Total" :isPrimary=true />
-          <BalanceCard :user="this.user" :currencySymbol="this.currencySymbol" title="Current Account"
-            :balance="user?.current_account?.balance" :iban="user?.current_account?.IBAN" />
-          <BalanceCard v-if="this.user?.saving_account != null" :user="this.user" :currencySymbol="this.currencySymbol"
-            title="Saving Account" :balance="user?.saving_account?.balance" :iban="user?.saving_account?.IBAN" />
-          <div v-else class="d-inline add-account" @click="showDialog()">
-            <i class="bi bi-plus-circle-fill"></i>
+      <div v-else>
+        <div class="row">
+          <h2 class="mt-3 mt-lg-5">Welcome, <strong class="accent">{{ user?.firstname }}</strong></h2>
+        </div>
+        <div class="row d-flex align-items-center">
+          <div class="col d-inline" v-if="user?.current_account != null">
+            <BalanceCard :user="this.user" :currencySymbol="this.currencySymbol" title="My Balance"
+              :balance="user?.total_balance" iban="Total" :isPrimary=true />
+            <BalanceCard :user="this.user" :currencySymbol="this.currencySymbol" title="Current Account"
+              :balance="user?.current_account?.balance" :iban="user?.current_account?.IBAN" />
+            <BalanceCard v-if="this.user?.saving_account != null" :user="this.user" :currencySymbol="this.currencySymbol"
+              title="Saving Account" :balance="user?.saving_account?.balance" :iban="user?.saving_account?.IBAN" />
+            <div v-else class="d-inline add-account" @click="showDialog()">
+              <i class="bi bi-plus-circle-fill"></i>
+            </div>
+          </div>
+          <div class="col d-inline" v-else>
+            <NoAccounts />
           </div>
         </div>
-        <div class="col d-inline" v-else>
-          <NoAccounts />
-        </div>
-      </div>
-      <div v-if="this.user?.current_account != null">
-        <div class="row d-flex my-4 mx-1 justify-content-evenly">
-          <LatestTransactions />
-          <LimitsCard />
+        <div v-if="this.user?.current_account != null">
+          <div class="row d-flex my-4 mx-1 justify-content-evenly">
+            <LatestTransactions />
+            <LimitsCard />
+          </div>
         </div>
       </div>
     </div>
@@ -63,7 +73,8 @@ export default {
     return {
       user: null,
       // EUR
-      currencySymbol: "\u20AC"
+      currencySymbol: "\u20AC",
+      isLoading: true
     };
   },
   methods: {
@@ -71,6 +82,7 @@ export default {
       axios.get(`/users/${useUserSessionStore().user_id}`)
         .then(response => {
           this.user = response.data;
+          this.isLoading = false;
         })
         .catch(error => {
         });
