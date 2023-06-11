@@ -3,7 +3,12 @@
         <div class="row">
             <h2>Limits</h2>
         </div>
-        <div class="row">
+        <div v-if="isLoading" class="row">
+            <div class="spinner-border text-primary d-inline" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div v-else class="row">
             <div class="row my-2 col-12">
                 <h3>Transaction Limit</h3>
                 <h4 class="fw-bold">{{ limits?.transaction_limit }} {{ currencySymbol }}</h4>
@@ -35,7 +40,8 @@ export default {
                 remaining_daily_transaction_limit: 0
             },
             // EUR
-            currencySymbol: "\u20AC"
+            currencySymbol: "\u20AC",
+            isLoading: true
         }
     },
     methods: {
@@ -52,6 +58,7 @@ export default {
         axios.get(`/users/${userId}/limits`)
             .then(response => {
                 this.limits = response.data;
+                this.isLoading = false;
             })
             .catch(error => {
                 console.log(error);

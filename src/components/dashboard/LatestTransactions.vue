@@ -22,7 +22,7 @@
         <div v-else class="row">
             <p>No transactions yet.</p>
         </div>
-        <div class="see-all-container">
+        <div v-if="!isLoading" class="row see-all-container">
             <router-link class="btn btn-primary" to="/transactionhistory">See all</router-link>
         </div>
     </div>
