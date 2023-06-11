@@ -282,6 +282,8 @@ export default {
         const dataList = document.getElementById("searchResults");
         dataList.innerHTML = "";
 
+        console.log("adding");
+
         // Add my own saving account.
         if (this.user?.saving_account != null) {
           const option = document.createElement("option");
@@ -305,7 +307,7 @@ export default {
                 const option = document.createElement("option");
                 option.value = account.firstName + " " + account.lastName + " (" + account.IBAN + ")";
 
-                if (account.IBAN === this.user?.current_account.IBAN) {
+                if (account.IBAN === this.user?.current_account?.IBAN) {
                   option.value = "MY CURRENT ACCOUNT" + " (" + account.IBAN + ")";
                 }
 
@@ -337,8 +339,11 @@ export default {
 
                 option.value = user.firstname + " " + user.lastname + " (" + iban + ")";
 
-                if (account.IBAN === this.user?.current_account.IBAN) {
-                  option.value = "MY CURRENT ACCOUNT" + " (" + account.IBAN + ")";
+                if (iban === this.user?.current_account?.IBAN) {
+                  option.value = "MY CURRENT ACCOUNT" + " (" + iban + ")";
+                }
+                else if (iban === this.user?.current_account?.IBAN) {
+                  option.value = "MY CURRENT ACCOUNT" + " (" + iban + ")";
                 }
 
                 dataList.appendChild(option);
