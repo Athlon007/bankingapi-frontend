@@ -263,6 +263,11 @@ export default {
     searchAccounts() {
       const query = this.search;
 
+      if (this.user == null) {
+        this.user = useUserSessionStore().user;
+        console.log(this.user);
+      }
+
       // Wait 500ms before making the call
       // We don't want to flood the server with requests with every key press
       setTimeout(() => {
@@ -277,6 +282,13 @@ export default {
         const dataList = document.getElementById("searchResults");
         dataList.innerHTML = "";
 
+        // Add my own saving account.
+        if (this.user?.saving_account != null) {
+          const option = document.createElement("option");
+          option.value = "MY SAVING ACCOUNT" + " (" + this.user.saving_account.IBAN + ")";
+          dataList.appendChild(option);
+        }
+
         if (this.searchMethod === 'IBAN') {
           axios.get("/accounts", {
             params: {
@@ -286,8 +298,17 @@ export default {
             .then(response => {
               // Add the accounts to the datalist
               response.data.forEach(account => {
+                if (account.account_type !== "CURRENT") {
+                  return;
+                }
+
                 const option = document.createElement("option");
                 option.value = account.firstName + " " + account.lastName + " (" + account.IBAN + ")";
+
+                if (account.IBAN === this.user?.current_account.IBAN) {
+                  option.value = "MY CURRENT ACCOUNT" + " (" + account.IBAN + ")";
+                }
+
                 dataList.appendChild(option);
               });
             })
@@ -314,12 +335,12 @@ export default {
                   iban = user.current_account.IBAN;
                 }
 
-                option.addEventListener("click", () => {
-                  console.log("Clicked");
-                  this.applyResult();
-                });
-
                 option.value = user.firstname + " " + user.lastname + " (" + iban + ")";
+
+                if (account.IBAN === this.user?.current_account.IBAN) {
+                  option.value = "MY CURRENT ACCOUNT" + " (" + account.IBAN + ")";
+                }
+
                 dataList.appendChild(option);
               });
             })
