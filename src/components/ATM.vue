@@ -65,19 +65,18 @@ export default {
       isDeposit: false,
     };
   },
-  mounted() {
+  async mounted() {
     if (!useUserSessionStore().isAuthenticated) {
       this.$router.push("/login");
     }
 
-    useUserSessionStore().getUser().then(user => {
-      this.user = user;
-      if (user.current_account == null) {
-        this.$router.push("/accounts");
+    await axios.get("/users/" + useUserSessionStore().user_id).then(
+      response => {
+        this.user = response.data;
+        this.account = response.data.current_account;
       }
-      else {
-        this.account = user.current_account;
-      }
+    ).catch(error => {
+      this.error = error.response.data.error_message;
     });
   },
   methods: {
