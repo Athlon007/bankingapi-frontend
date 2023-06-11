@@ -14,10 +14,15 @@
                 <hr />
             </div>
         </div>
+        <div v-else-if="isLoading" class="row">
+            <div class="spinner-border text-primary d-inline" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
         <div v-else class="row">
             <p>No transactions yet.</p>
         </div>
-        <div class="see-all-container">
+        <div v-if="!isLoading" class="row see-all-container">
             <router-link class="btn btn-primary" to="/transactionhistory">See all</router-link>
         </div>
     </div>
@@ -32,7 +37,8 @@ export default {
     data() {
         return {
             lastTransactions: [],
-            hasTransactions: false
+            hasTransactions: false,
+            isLoading: true
         }
     },
     props: {
@@ -52,6 +58,8 @@ export default {
                 .then(response => {
                     this.lastTransactions = response.data.slice().reverse().slice(0, 3);
                     this.hasTransactions = this.lastTransactions.length > 0;
+
+                    this.isLoading = false;
                 })
                 .catch(error => {
                     console.log(error);

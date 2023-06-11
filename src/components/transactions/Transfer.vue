@@ -47,7 +47,8 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="amount" class="form-label h5">Amount <small class="text-secondary-emphasis">*required</small></label>
+          <label for="amount" class="form-label h5">Amount <small
+              class="text-secondary-emphasis">*required</small></label>
           <div class="d-flex justify-content-center">
             <label for="amount" class="align-middle p-2 h5" style="padding-left: 0 !important;">&euro;</label>
             <input type="number" step="0.01" min="0" class="form-control h5" id="amount" placeholder="0.00" required>
@@ -65,10 +66,11 @@
               </select>
             </div>
             <div class="col-md-10">
-              <label class="form-label my-0" for="search-field">{{ this.searchMethod == 'IBAN' ? 'IBAN' : 'Name' }}</label>
+              <label class="form-label my-0" for="search-field">{{ this.searchMethod == 'IBAN' ? 'IBAN' : 'Name'
+              }}</label>
               <input id="search-field" type="text" class="form-control custom-select my-1"
-                     :placeholder="this.searchMethod == 'IBAN' ? 'Search by IBAN...' : 'Search by name...'" v-model="search"
-                     @input="searchAccounts" list="searchResults" @change="applyResult" />
+                :placeholder="this.searchMethod == 'IBAN' ? 'Search by IBAN...' : 'Search by name...'" v-model="search"
+                @input="searchAccounts" list="searchResults" @change="applyResult" />
               <datalist id="searchResults" @click="applyResult" @change="applyResult"></datalist>
             </div>
           </div>
@@ -80,8 +82,7 @@
         </div>
         <div class="mb-3">
           <label for="description" class="form-label h5">Description</label>
-          <input type="text" class="form-control" id="description" placeholder="Description"
-            v-model="description">
+          <input type="text" class="form-control" id="description" placeholder="Description" v-model="description">
         </div>
         <div class="alert alert-warning" role="alert" v-if="!selectedAccount?.isActive">
           The current account is inactive and cannot be used for transfers.
@@ -102,8 +103,6 @@
 <script>
 import { useUserSessionStore } from "@/stores/usersession";
 import axios from "@/axios_auth";
-import 'vue-search-select/dist/VueSearchSelect.css';
-import { ModelSelect } from 'vue-search-select'
 
 export default {
   name: "Transfer",
@@ -127,9 +126,6 @@ export default {
       selectedIban: "",
       description: ""
     };
-  },
-  components: {
-    ModelSelect
   },
   async mounted() {
     if (!useUserSessionStore().isAuthenticated) {
@@ -267,6 +263,11 @@ export default {
     searchAccounts() {
       const query = this.search;
 
+      if (this.user == null) {
+        this.user = useUserSessionStore().user;
+        console.log(this.user);
+      }
+
       // Wait 500ms before making the call
       // We don't want to flood the server with requests with every key press
       setTimeout(() => {
@@ -281,6 +282,15 @@ export default {
         const dataList = document.getElementById("searchResults");
         dataList.innerHTML = "";
 
+        console.log("adding");
+
+        // Add my own saving account.
+        if (this.user?.saving_account != null) {
+          const option = document.createElement("option");
+          option.value = "MY SAVING ACCOUNT" + " (" + this.user.saving_account.IBAN + ")";
+          dataList.appendChild(option);
+        }
+
         if (this.searchMethod === 'IBAN') {
           axios.get("/accounts", {
             params: {
@@ -290,8 +300,17 @@ export default {
             .then(response => {
               // Add the accounts to the datalist
               response.data.forEach(account => {
+                if (account.account_type !== "CURRENT") {
+                  return;
+                }
+
                 const option = document.createElement("option");
                 option.value = account.firstName + " " + account.lastName + " (" + account.IBAN + ")";
+
+                if (account.IBAN === this.user?.current_account?.IBAN) {
+                  option.value = "MY CURRENT ACCOUNT" + " (" + account.IBAN + ")";
+                }
+
                 dataList.appendChild(option);
               });
             })
@@ -318,12 +337,15 @@ export default {
                   iban = user.current_account.IBAN;
                 }
 
-                option.addEventListener("click", () => {
-                  console.log("Clicked");
-                  this.applyResult();
-                });
-
                 option.value = user.firstname + " " + user.lastname + " (" + iban + ")";
+
+                if (iban === this.user?.current_account?.IBAN) {
+                  option.value = "MY CURRENT ACCOUNT" + " (" + iban + ")";
+                }
+                else if (iban === this.user?.current_account?.IBAN) {
+                  option.value = "MY CURRENT ACCOUNT" + " (" + iban + ")";
+                }
+
                 dataList.appendChild(option);
               });
             })
