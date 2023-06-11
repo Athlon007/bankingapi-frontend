@@ -35,9 +35,9 @@
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary btn-lg withdraw-btn"
-                @click.prevent="processTransaction('withdraw')">Withdraw</button>
+                      @click="isDeposit = false">Withdraw</button>
               <button type="submit" class="btn btn-primary btn-lg deposit-btn"
-                @click.prevent="processTransaction('deposit')">Deposit</button>
+                      @click="isDeposit = true">Deposit</button>
             </div>
           </form>
         </div>
@@ -61,7 +61,8 @@ export default {
       error: "",
       account: null,
       transaction_message: "",
-      transaction_successfull: null
+      transaction_successfull: null,
+      isDeposit: false,
     };
   },
   mounted() {
@@ -104,7 +105,7 @@ export default {
         currencyType: this.account?.currency_type,
       };
 
-      if (transactionType === "withdraw") {
+      if (!this.isDeposit) {
         axios
           .post("transactions/withdraw", transactionData)
           .then(response => {
@@ -116,7 +117,7 @@ export default {
             this.error = error.response.data.error_message;
             this.transaction_successfull = false;
           })
-      } else if (transactionType === "deposit") {
+      } else if (this.isDeposit) {
         axios
           .post("/transactions/deposit", transactionData)
           .then(response => {

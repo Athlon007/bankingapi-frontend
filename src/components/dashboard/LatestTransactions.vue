@@ -10,8 +10,13 @@
                 <p class="fw-bold amount"
                     :class="isTransactionAddingMoney(transaction) ? 'positive' : isOwnTransaction(transaction) ? '' : 'negative'">
                     {{
-                        transaction.amount }} {{ currencySymbol }}</p>
+                        formatDecimal(transaction.amount) }} {{ currencySymbol }}</p>
                 <hr />
+            </div>
+        </div>
+        <div v-else-if="isLoading" class="row">
+            <div class="spinner-border text-primary d-inline" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
         <div v-else class="row">
@@ -32,7 +37,8 @@ export default {
     data() {
         return {
             lastTransactions: [],
-            hasTransactions: false
+            hasTransactions: false,
+            isLoading: true
         }
     },
     props: {
@@ -52,6 +58,8 @@ export default {
                 .then(response => {
                     this.lastTransactions = response.data.slice().reverse().slice(0, 3);
                     this.hasTransactions = this.lastTransactions.length > 0;
+
+                    this.isLoading = false;
                 })
                 .catch(error => {
                     console.log(error);
@@ -76,6 +84,13 @@ export default {
 
             const thisUsersSavingAccountIban = useUserSessionStore().user.saving_account.IBAN;
             return transaction.sender_iban == thisUsersIban && transaction.receiver_iban == thisUsersSavingAccountIban || transaction.sender_iban == thisUsersSavingAccountIban && transaction.receiver_iban == thisUsersIban;
+        },
+        formatDecimal(number) {
+            if (number % 1 === 0) {
+                return number;
+            }
+
+            return number.toFixed(2);
         }
     },
     mounted() {

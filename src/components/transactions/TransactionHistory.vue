@@ -88,8 +88,8 @@
             <th scope="col">ID</th>
             <th scope="col">Type</th>
             <th scope="col">Performer</th>
-            <th scope="col">Receiver IBAN</th>
             <th scope="col">Sender IBAN</th>
+            <th scope="col">Receiver IBAN</th>
             <th scope="col">Amount</th>
             <th scope="col">Timestamp</th>
             <th scope="col">Description</th>
@@ -100,9 +100,10 @@
             <th scope="row">{{ transaction.id }}</th>
             <td>{{ transaction.transactionType }}</td>
             <td>{{ transaction.username }}</td>
-            <td>{{ transaction.receiver_iban }}</td>
             <td>{{ transaction.sender_iban }}</td>
-            <td>{{ transaction.amount }}</td>
+            <td>{{ transaction.receiver_iban }}</td>
+            <td class="fw-bold" :class="isTransactionAddingMoney(transaction) ? 'positive' : isOwnTransaction(transaction) ? '' : 'negative'">
+              {{ transaction.amount.toFixed(2) }} {{currencySymbol}}</td>
             <td>{{ formatDate(transaction.timestamp) }}</td>
             <td>{{ transaction.description }}</td>
           </tr>
@@ -149,6 +150,12 @@ export default {
       userSenderID: null,
       userReceiverID: null,
     };
+  },
+  props: {
+    currencySymbol: {
+      type: String,
+      default: "\u20AC"
+    }
   },
   async mounted() {
     if (!useUserSessionStore().isAuthenticated) {
@@ -267,7 +274,27 @@ export default {
       } else if (event.target.value == "UserID") {
         this.activateFilterByUserIDs();
       }
-    }
+    },
+    isTransactionAddingMoney(transaction) {
+      const thisUsersIban = useUserSessionStore().user.current_account.IBAN;
+      if (transaction.transactionType === 'TRANSACTION') {
+        return transaction.receiver_iban == thisUsersIban;
+      } else if (transaction.transactionType === 'DEPOSIT') {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    isOwnTransaction(transaction) {
+      const thisUsersIban = useUserSessionStore().user.current_account.IBAN;
+
+      if (useUserSessionStore().user.saving_account == null) {
+        return false;
+      }
+
+      const thisUsersSavingAccountIban = useUserSessionStore().user.saving_account.IBAN;
+      return transaction.sender_iban == thisUsersIban && transaction.receiver_iban == thisUsersSavingAccountIban || transaction.sender_iban == thisUsersSavingAccountIban && transaction.receiver_iban == thisUsersIban;
+    },
   }
 };
 </script>
@@ -278,5 +305,13 @@ tbody>tr {
 }
 section {
   background-color: #F9F8FB;
+}
+
+.positive {
+  color: green;
+}
+
+.negative {
+  color: red;
 }
 </style>

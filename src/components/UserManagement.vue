@@ -159,7 +159,8 @@
                                         <div class="row" v-else>
                                             <p><strong>Account ID:</strong> {{ this.edited_user.current_account.id }}</p>
                                             <p><strong>IBAN:</strong> {{ this.edited_user.current_account.IBAN }}</p>
-                                            <p><strong>Balance:</strong> {{ this.edited_user.current_account.balance }}
+                                            <p><strong>Balance:</strong> {{
+                                                formatDecimal(this.edited_user.current_account.balance) }}
                                                 &euro;</p>
                                             <p><strong>Active: </strong> {{ this.edited_user.current_account.isActive ?
                                                 "Yes" : "No" }}
@@ -201,7 +202,8 @@
                                         <div class="row" v-else>
                                             <p><strong>Account ID:</strong> {{ this.edited_user.saving_account.id }}</p>
                                             <p><strong>IBAN:</strong> {{ this.edited_user.saving_account.IBAN }}</p>
-                                            <p><strong>Balance:</strong> {{ this.edited_user.saving_account.balance }}
+                                            <p><strong>Balance:</strong> {{
+                                                formatDecimal(this.edited_user.saving_account.balance) }}
                                                 &euro;</p>
                                             <p><strong>Active: </strong> {{ this.edited_user.saving_account.isActive ? "Yes"
                                                 : "No" }}
@@ -587,6 +589,13 @@ export default {
                 if (query !== this.searchQuery) return;
                 this.search();
             }, 500);
+        },
+        formatDecimal(value) {
+            if (value % 1 === 0) {
+                return value;
+            }
+
+            return value.toFixed(2);
         }
     },
     async mounted() {
