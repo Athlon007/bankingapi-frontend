@@ -58,6 +58,8 @@ export default {
                 .then(response => {
                     this.lastTransactions = response.data.slice().reverse().slice(0, 3);
                     this.hasTransactions = this.lastTransactions.length > 0;
+
+                    this.isLoading = false;
                 })
                 .catch(error => {
                     console.log(error);
