@@ -81,8 +81,8 @@ export default {
 
     await axios.get("/users/" + useUserSessionStore().user_id).then(
       response => {
-        if (response.data.current_account == null) {
-          this.hasAccount = false;
+        if (response.data.current_account != null) {
+          this.hasAccount = true;
         }
 
         this.user = response.data;
