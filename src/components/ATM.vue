@@ -6,7 +6,7 @@
       </div>
 
     </div>
-    <div class="row my-4">
+    <div class="row my-4" v-if="hasAccount">
       <div class="col-md-6 offset-md-3">
         <div class="card p-4 atm-card">
           <h3 class="text-center mb-4">Withdraw or Deposit</h3>
@@ -35,11 +35,19 @@
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary btn-lg withdraw-btn"
-                      @click="isDeposit = false">Withdraw</button>
-              <button type="submit" class="btn btn-primary btn-lg deposit-btn"
-                      @click="isDeposit = true">Deposit</button>
+                @click="isDeposit = false">Withdraw</button>
+              <button type="submit" class="btn btn-primary btn-lg deposit-btn" @click="isDeposit = true">Deposit</button>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+    <div class="row container mx-auto" v-else>
+      <div class="col-6 mx-auto">
+        <div class="card p-2">
+          <h2>Oops!</h2>
+          <p>Sorry, you must wait for an account to be activated by one of our employees.</p>
+          <router-link to="/dashboard" class="btn btn-primary">Go back</router-link>
         </div>
       </div>
     </div>
@@ -63,6 +71,7 @@ export default {
       transaction_message: "",
       transaction_successfull: null,
       isDeposit: false,
+      hasAccount: false
     };
   },
   async mounted() {
@@ -72,6 +81,10 @@ export default {
 
     await axios.get("/users/" + useUserSessionStore().user_id).then(
       response => {
+        if (response.data.current_account == null) {
+          this.hasAccount = false;
+        }
+
         this.user = response.data;
         this.account = response.data.current_account;
       }
